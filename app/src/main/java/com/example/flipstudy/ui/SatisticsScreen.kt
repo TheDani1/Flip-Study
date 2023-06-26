@@ -5,6 +5,6 @@ import androidx.compose.runtime.Composable
 @Composable
 fun StatisticsScreen() {
     androidx.compose.material3.Text(
-        text = "Hello statistics!",
+        text = "Hola statistics!",
     )
 }
