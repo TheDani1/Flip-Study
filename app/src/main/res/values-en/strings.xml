@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Flip&amp;Study</string>
+    <string name="statistics">Statistics</string>
+    <string name="timer">Timer</string>
+    <string name="settings">Settings</string>
+</resources>
