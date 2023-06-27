@@ -1,5 +1,6 @@
 package com.example.flipstudy.ui
 
+import androidx.annotation.Keep
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,6 +24,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
@@ -30,6 +32,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.HourglassEmpty
 import androidx.compose.material.icons.filled.HourglassTop
 import androidx.compose.material.icons.filled.Label
 import androidx.compose.material.icons.filled.LockClock
@@ -44,6 +47,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -72,6 +76,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.flipstudy.R
 
+@Keep
+class Botones(
+    val id:Int,
+    var name: String? = "0",
+    val a: (Int) -> Int = { i: Int -> i + 1 }
+){}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
@@ -81,7 +92,8 @@ fun TimerScreen() {
     var checked by remember { mutableStateOf(true) }
     val openDialog = remember { mutableStateOf(false) }
 
-    val numbers = (0..9).toList()
+    var numbers = (1..9).toList()
+    numbers += 0
 
     if (openDialog.value) {
         AlertDialog(
@@ -91,24 +103,69 @@ fun TimerScreen() {
                 // onDismissRequest.
                 openDialog.value = false
             },
-            icon = { Icon(Icons.Filled.LockClock, contentDescription = null) },
+            modifier = Modifier.fillMaxWidth(),
+            icon = { Icon(Icons.Filled.HourglassEmpty, contentDescription = null) },
             title = {
-                Text(text = "00h 00m 00s")
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "00",
+                        style = MaterialTheme.typography.displayLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = "h",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                    Text(
+                        text = "00",
+                        style = MaterialTheme.typography.displayLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = "m",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                    Text(
+                        text = "00",
+                        style = MaterialTheme.typography.displayLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = "s",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                }
             },
             text = {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(3),
+                    contentPadding = PaddingValues(horizontal = 1.dp, vertical = 1.dp),
+                    verticalArrangement = Arrangement.spacedBy(7.dp),
+                    horizontalArrangement = Arrangement.spacedBy(7.dp),
                 ) {
-                    items(numbers.size) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally,  modifier = Modifier
-                            .padding(1.dp),) {
-                            Button(
-                                onClick = { /* Do something! */ },
-                                modifier = Modifier
-                                    .padding(1.dp),
-                            ){ Text(text = "$it", modifier = Modifier
-                                    .padding(1.dp),) }
+                    items(numbers) { item ->
+
+                        Button(
+                            onClick = { /*TODO*/ },
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .size(75.dp),  //avoid the oval shape
+                            shape = CircleShape,
+                            contentPadding = PaddingValues(0.dp),  //avoid the little icon
+                        ) {
+                            Text(
+                                text = item.toString(),
+                                style = MaterialTheme.typography.titleLarge
+                            )
                         }
+
                     }
                 }
             },
@@ -116,9 +173,10 @@ fun TimerScreen() {
                 TextButton(
                     onClick = {
                         openDialog.value = false
-                    }
+                    },
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSurface)
                 ) {
-                    Text("Confirm")
+                    Text("Confirmar", style = MaterialTheme.typography.titleSmall)
                 }
             },
             dismissButton = {
@@ -127,7 +185,11 @@ fun TimerScreen() {
                         openDialog.value = false
                     }
                 ) {
-                    Text("Dismiss")
+                    Text(
+                        "Cancelar",
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
                 }
             }
         )
@@ -177,8 +239,6 @@ fun TimerScreen() {
                             )
 
                     }
-
-
 
                     Divider()
 
