@@ -43,7 +43,7 @@ fun CountdownSetterDialog(
 
     if (openDialog.value) {
 
-        var countdown_copy = remember { mutableStateOf(countdown.value) }
+        var countdown_copy = remember { mutableStateOf(if (countdown.value.toInt() == 0) "" else countdown.value.toInt().toString()) }
 
         AlertDialog(
             onDismissRequest = {

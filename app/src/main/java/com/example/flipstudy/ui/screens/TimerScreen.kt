@@ -1,6 +1,7 @@
 package com.example.flipstudy.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,7 +35,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -45,6 +48,8 @@ import com.example.flipstudy.ui.components.BottomNavigation
 import com.example.flipstudy.ui.components.CountdownActions
 import com.example.flipstudy.ui.components.CountdownSetterDialog
 import com.example.flipstudy.ui.components.TimerAction
+import com.example.flipstudy.ui.label.data.Label
+import com.example.flipstudy.ui.label.ui.ModalBottomSheet
 import com.example.flipstudy.ui.navigation.AppNavigation
 
 fun segundos(tiempo: MutableState<String>): String {
@@ -80,25 +85,24 @@ fun horas(tiempo: MutableState<String>): String{
 @Composable
 fun TimerScreen(navController: NavController) {
 
-    var checkedState = remember { mutableStateOf(true) }
-    val state = rememberSaveable(checkedState) { mutableStateOf(true) }
+    var checkedState = rememberSaveable { mutableStateOf(true) }
 
-    var checked = remember { mutableStateOf(true) }
-    val openDialog = remember { mutableStateOf(false) }
+    var checked = rememberSaveable { mutableStateOf(true) }
+    val openDialog = rememberSaveable { mutableStateOf(false) }
 
-    var countdown = remember { mutableStateOf("101110") }
+    var countdown = rememberSaveable { mutableStateOf("000000") }
     // H -> 0
     // M -> 1
     // S -> 2
 
-    // 10h 11m 10s 10 horas 11 minutos  10 segundos
-    //
+    val openModalBottomSheet = rememberSaveable { mutableStateOf(false) }
 
-    var numbers = (1..9).toList()
-    numbers += 0
+    // 10h 11m 10s 10 horas 11 minutos  10 segundos
 
     CountdownSetterDialog(openDialog, actions = CountdownActions,
         modifier = Modifier.padding(8.dp), countdown)
+    
+    ModalBottomSheet(openModalBottomSheet = openModalBottomSheet)
 
     Column(
         modifier = Modifier
@@ -168,17 +172,24 @@ fun TimerScreen(navController: NavController) {
                         modifier = Modifier.padding(vertical = 10.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            modifier = Modifier.size(35.dp),
-                            imageVector = Icons.Filled.Label,
-                            contentDescription = "Etiqueta",
-                            tint = MaterialTheme.colorScheme.error
-                        )
-                        Text(
-                            text = "Matemáticas",
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier.padding(horizontal = 5.dp)
-                        )
+                        Box(
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.surface)
+                                .clickable { openModalBottomSheet.value = true },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(35.dp),
+                                imageVector = Icons.Filled.Label,
+                                contentDescription = "Etiqueta",
+                                tint = MaterialTheme.colorScheme.error
+                            )
+                            Text(
+                                text = "Matemáticas",
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(horizontal = 5.dp)
+                            )
+                        }
                     }
 
                     Row(
@@ -198,8 +209,8 @@ fun TimerScreen(navController: NavController) {
                         )
 
                         Checkbox(
-                            checked = state.value,
-                            onCheckedChange = { state.value = !state.value }
+                            checked = checkedState.value,
+                            onCheckedChange = { checkedState.value = !checkedState.value }
                         )
                     }
 
