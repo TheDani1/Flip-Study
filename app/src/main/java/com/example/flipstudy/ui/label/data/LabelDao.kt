@@ -6,16 +6,15 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LabelDao {
 
     @Query("SELECT * from labels ORDER BY name ASC")
-    fun getAllLabels(): Flow<List<Label>>
+    fun getAllLabels(): List<Label>
 
     @Query("SELECT * from labels WHERE id = :id")
-    fun getLabel(id: Int): Flow<Label>
+    fun getLabel(id: Int): Label
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(Label: Label)

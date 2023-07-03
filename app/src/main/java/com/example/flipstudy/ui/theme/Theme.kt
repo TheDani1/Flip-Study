@@ -75,16 +75,16 @@ private val DarkColors = darkColorScheme(
 @Composable
 fun FlipStudyTheme(
   useDarkTheme: Boolean = isSystemInDarkTheme(),
-  content: @Composable() () -> Unit
+  content: @Composable() () -> Unit,
 ) {
-  val colors = if (!useDarkTheme) {
+  val mycolors = if (!useDarkTheme) {
     LightColors
   } else {
     DarkColors
   }
 
   MaterialTheme(
-    colorScheme = colors,
+    colorScheme = mycolors,
     content = content
   )
 }

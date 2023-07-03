@@ -1,21 +1,15 @@
 package com.example.flipstudy.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.HourglassEmpty
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,11 +17,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collection.MutableVector
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import com.example.flipstudy.ui.screens.horas
 import com.example.flipstudy.ui.screens.minutos
@@ -38,12 +33,17 @@ fun CountdownSetterDialog(
     openDialog: MutableState<Boolean>,
     actions: List<TimerAction>,
     modifier: Modifier = Modifier,
-    countdown: MutableState<String>
+    countdown: MutableState<String>,
+    horas: MutableState<Int>,
+    minutos: MutableState<Int>,
+    segundos: MutableState<Int>
 ) {
 
     if (openDialog.value) {
 
         var countdown_copy = remember { mutableStateOf(if (countdown.value.toInt() == 0) "" else countdown.value.toInt().toString()) }
+
+        val haptic = LocalHapticFeedback.current
 
         AlertDialog(
             onDismissRequest = {
@@ -108,6 +108,7 @@ fun CountdownSetterDialog(
                             action = action,
                             modifier = Modifier.aspectRatio(1f),
                             onClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 if(!(action.text == "0" && countdown_copy.value.isEmpty()) && action.text != "delete" && countdown_copy.value.length <= 5){
                                     countdown_copy.value += action.text
                                 }else if(action.text == "delete"){
@@ -124,40 +125,20 @@ fun CountdownSetterDialog(
                     onClick = {
                         openDialog.value = false
 
-                        var horas = horas(countdown_copy).toInt()
-                        var minutos = minutos(countdown_copy).toInt()
-                        var segundos = segundos(countdown_copy).toInt()
+                        var horasD = horas(countdown_copy).toInt()
+                        var minutosD = minutos(countdown_copy).toInt()
+                        var segundosD = segundos(countdown_copy).toInt()
 
-                        var horasString = ""
-                        var minutosString = ""
-                        var segundosString = ""
+                        horasD += minutosD/60
+                        minutosD += segundosD/60
 
-                        horas += minutos/60
-                        minutos += segundos/60
+                        minutosD %= 60
+                        segundosD %= 60
 
-                        minutos %= 60
-                        segundos %= 60
+                        horas.value = horasD
+                        minutos.value = minutosD
+                        segundos.value = segundosD
 
-                        horasString = if(horas < 9){
-                            "0$horas"
-                        }else{
-                            horas.toString()
-                        }
-
-                        minutosString = if(minutos < 9){
-                            "0$minutos"
-
-                        }else{
-                            minutos.toString()
-                        }
-
-                        segundosString = if(segundos < 9){
-                            "0$segundos"
-                        }else{
-                            segundos.toString()
-                        }
-
-                        countdown.value = horasString+minutosString+segundosString
                     },
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onSurface)
                 ) {
