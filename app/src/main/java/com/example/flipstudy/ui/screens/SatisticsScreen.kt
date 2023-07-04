@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -53,7 +54,7 @@ fun BlankScreen() {
             )
 
             Text(
-                text = "Flip and study more!",
+                text = stringResource(R.string.flip_and_study_more),
                 style = MaterialTheme.typography.displayMedium,
                 color = MaterialTheme.colorScheme.surfaceTint,
                 textAlign = TextAlign.Center
@@ -61,7 +62,7 @@ fun BlankScreen() {
 
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = "(No statistics data)",
+                text = stringResource(R.string.no_statistics_data),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.surfaceTint,
                 textAlign = TextAlign.Center

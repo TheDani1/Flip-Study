@@ -7,11 +7,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.HourglassEmpty
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -54,7 +51,6 @@ fun CountdownSetterDialog(
             },
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
             modifier = Modifier.fillMaxWidth(),
-            icon = { Icon(Icons.Filled.HourglassEmpty, contentDescription = null) },
             title = {
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),

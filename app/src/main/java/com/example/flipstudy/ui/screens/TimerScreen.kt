@@ -45,9 +45,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.flipstudy.R
 import com.example.flipstudy.ui.components.CountdownActions
 import com.example.flipstudy.ui.components.CountdownSetterDialog
 import com.example.flipstudy.ui.components.SegmentedButton
@@ -356,7 +358,7 @@ fun TimerScreen(
             .padding(15.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val genders = listOf("Flip&Study", "Timer")
+        val genders = listOf("Flip&Study", stringResource(R.string.timer_segmentedbutton))
         SegmentedButton(
             items = genders,
             defaultSelectedItemIndex = if(modeFlipStudy.value) 0 else 1 ,
@@ -416,6 +418,7 @@ fun TimerScreen(
 
                 TextButton(
                     onClick = {
+                        countdownRunning.value = false
                         intsToCountdown(horas, minutos, segundos, countdown)
                         openDialog.value = true
                     },

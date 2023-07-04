@@ -2,4 +2,8 @@
     <string name="app_name">Flip&amp;Study</string>
     <string name="statistics">Estadísticas</string>
     <string name="timer">Timer</string>
+    <string name="timer_segmentedbutton">Timer</string>
+    <string name="add_label">Add label</string>
+    <string name="flip_and_study_more">Flip and study more!</string>
+    <string name="no_statistics_data">(No statistics data)</string>
 </resources>

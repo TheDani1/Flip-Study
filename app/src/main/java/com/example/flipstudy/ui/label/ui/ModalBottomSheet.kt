@@ -32,7 +32,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.flipstudy.R
 import com.example.flipstudy.ui.label.data.Label
 import com.example.flipstudy.ui.label.data.LabelDatabase
 import com.example.flipstudy.ui.label.data.colorEnumToColor
@@ -93,11 +95,21 @@ fun ModalBottomSheet(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Row {
+
+                                        if(labelSelected.value.id == real.id) {
+                                            Icon(
+                                                Icons.Filled.Check,
+                                                contentDescription = "Label utilizada",
+                                                tint = MaterialTheme.colorScheme.outline,
+                                                modifier = Modifier.absolutePadding(left = 12.dp)
+                                            )
+                                        }
+
                                         Icon(
                                             Icons.Filled.Label,
-                                            contentDescription = "Localized description",
+                                            contentDescription = "Label",
                                             tint = colorEnumToColor(real.color),
-                                            modifier = Modifier.absolutePadding(left = 12.dp)
+                                            modifier = Modifier.absolutePadding(left = 6.dp)
                                         )
                                         Text(
                                             real.name,
@@ -113,7 +125,6 @@ fun ModalBottomSheet(
                                                 modifier = Modifier.absolutePadding(right = 12.dp)
                                             )
                                         },
-                                        modifier = Modifier.absolutePadding(right = 12.dp),
                                         onClick = {
                                             coroutineScope.launch {
                                                 db.labelDao().delete(
@@ -128,15 +139,6 @@ fun ModalBottomSheet(
                                             reals.remove(real)
                                         }
                                     )
-                                    if(labelSelected.value.id == real.id) {
-                                        Icon(
-                                            Icons.Filled.Check,
-                                            contentDescription = "Localized description",
-                                            tint = MaterialTheme.colorScheme.outline,
-                                            modifier = Modifier.absolutePadding(right = 12.dp)
-                                        )
-                                    }
-
                                 }
                             }
                             Divider(modifier = Modifier.fillMaxWidth())
@@ -163,7 +165,7 @@ fun ModalBottomSheet(
                                             modifier = Modifier.absolutePadding(left = 12.dp)
                                         )
                                         Text(
-                                            text = "Add label",
+                                            text = stringResource(R.string.add_label),
                                             style = MaterialTheme.typography.titleMedium,
                                             modifier = Modifier.absolutePadding(left = 12.dp)
                                         )

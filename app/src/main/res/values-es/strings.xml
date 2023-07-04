@@ -2,5 +2,9 @@
 <resources>
     <string name="app_name">Flip&amp;Study</string>
     <string name="statistics">Estadísticas</string>
-    <string name="timer">Timer</string>
+    <string name="timer">Cronómetro</string>
+    <string name="timer_segmentedbutton">Cronómetro</string>
+    <string name="add_label">Añadir etiqueta</string>
+    <string name="flip_and_study_more">Flip&amp;Study más!</string>
+    <string name="no_statistics_data">(No hay datos de estadísticas)</string>
 </resources>
