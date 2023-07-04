@@ -4,58 +4,53 @@ import android.media.Ringtone
 import android.os.Build
 import android.os.CombinedVibration
 import android.os.VibrationEffect
-import android.os.VibratorManager
+import android.os.Vibrator
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Label
-import androidx.compose.material.icons.filled.RingVolume
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Vibration
 import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.compose.FlipStudyTheme
-import com.example.flipstudy.R
 import com.example.flipstudy.ui.components.CountdownActions
 import com.example.flipstudy.ui.components.CountdownSetterDialog
 import com.example.flipstudy.ui.components.SegmentedButton
@@ -148,15 +143,15 @@ fun TimerScreen(
     db: LabelDatabase,
     sensorAvailability: MutableState<Boolean>,
     sensorValues: MutableState<Float>,
-    vibratorManager: VibratorManager,
+    vibratorManager: Vibrator,
     ringtone: Ringtone,
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
 
-    var ticks = rememberSaveable { mutableStateOf(0) }
+    var checkedVibration = rememberSaveable { mutableStateOf(true) }
 
-    var checkedState = rememberSaveable { mutableStateOf(true) }
+    var checkSound = rememberSaveable { mutableStateOf(true) }
 
-    var checked = rememberSaveable { mutableStateOf(true) }
     val openDialog = rememberSaveable { mutableStateOf(false) }
 
     var countdown = rememberSaveable { mutableStateOf("000000") }
@@ -164,8 +159,8 @@ fun TimerScreen(
     var worked = rememberSaveable { mutableStateOf(false) }
 
     var horas = rememberSaveable { mutableStateOf(0) }
-    var minutos = rememberSaveable { mutableStateOf(0) }
-    var segundos = rememberSaveable { mutableStateOf(10) }
+    var minutos = rememberSaveable { mutableStateOf(59) }
+    var segundos = rememberSaveable { mutableStateOf(59) }
 
     // TODO
     val timings: LongArray = longArrayOf(50, 50, 50, 50, 50, 50, 50)
@@ -178,10 +173,13 @@ fun TimerScreen(
     val openModalBottomSheet = rememberSaveable { mutableStateOf(false) }
 
     val labelSelected =
-        rememberSaveable { mutableStateOf(Label(1, "Unlabelled", ColorEnum.GRAY, 0)) }
+        rememberSaveable { mutableStateOf(Label(0, "Unlabelled", ColorEnum.GRAY, 0)) }
+
+    val modeFlipStudy = rememberSaveable { mutableStateOf(true) }
+    val countdownRunning = rememberSaveable { mutableStateOf(false) }
 
     // COUNTDOWN SETTER DIALOG
-    /*CountdownSetterDialog(
+    CountdownSetterDialog(
         openDialog, actions = CountdownActions,
         modifier = Modifier.padding(8.dp), countdown, horas, minutos, segundos
     )
@@ -189,64 +187,178 @@ fun TimerScreen(
     // MODAL DE ETIQUETAS
     ModalBottomSheet(openModalBottomSheet = openModalBottomSheet, db, labelSelected)
 
-    // COUNTDOWN EN SI
-    LaunchedEffect(key1 = sensorValues.value <= 20f, key2 = segundos.value) {
+    if (modeFlipStudy.value) {
 
-        Log.d("QUEASCO", segundos.value.toString())
-        Log.d("QUEASCO", minutos.value.toString())
-        Log.d("QUEASCO", horas.value.toString())
+        // COUNTDOWN EN SI
+        LaunchedEffect(key1 = sensorValues.value <= 20f, key2 = segundos.value) {
 
-        if(segundos.value == 0 && minutos.value >= 1){
-            minutos.value -= 1
-            segundos.value += 60
-        }
-
-        if(minutos.value == 0 && horas.value >= 1){
-            horas.value -= 1
-            minutos.value += 60
-        }
-
-        if(minutos.value == 0 && segundos.value == 0 && horas.value == 0){
-
-            Log.d("BOOLEAN", checkedState.value.toString())
-
-
-            if(vibratorManager.defaultVibrator.areAllPrimitivesSupported() && checkedState.value){
-                vibratorManager.vibrate(
-                    CombinedVibration.createParallel(VibrationEffect.createOneShot(1000,50))
-                )
-            }else{
-                vibratorManager.vibrate(
-                    CombinedVibration.createParallel(VibrationEffect.createWaveform(timings, amplitudes, repeatIndex))
-                )
+            if (segundos.value == 0 && minutos.value >= 1) {
+                minutos.value -= 1
+                segundos.value += 60
             }
 
-            // TODO
-            //ringtone.play()
+            if (minutos.value == 0 && horas.value >= 1) {
+                horas.value -= 1
+                minutos.value += 60
+            }
 
-            if(sensorValues.value > 20f){
-                //ringtone.stop()
-                vibratorManager.cancel()
+            if (minutos.value == 0 && segundos.value == 0 && horas.value == 0) {
 
-                db.labelDao().update(Label(labelSelected.value.id, labelSelected.value.name,labelSelected.value.color, labelSelected.value.dedicatedSeconds))
-                Log.d("SUBIDOBD",labelSelected.value.id.toString() + labelSelected.value.name + labelSelected.value.color + labelSelected.value.dedicatedSeconds )
+                Log.d("BOOLEAN", checkedVibration.value.toString())
+
+                if (checkedVibration.value) {
+                    if (vibratorManager.areAllPrimitivesSupported() && checkedVibration.value) {
+                        vibratorManager.vibrate(
+                            VibrationEffect.createOneShot(
+                                1000,
+                                50
+                            )
+                        )
+                    } else {
+                        vibratorManager.vibrate(
+                            VibrationEffect.createWaveform(
+                                timings,
+                                amplitudes,
+                                repeatIndex
+                            )
+                        )
+                    }
+                }
+
+                // TODO
+                if (checkSound.value) ringtone.play()
+
+                if (sensorValues.value > 20f) {
+                    if (checkSound.value) ringtone.stop()
+                    if (checkedVibration.value) vibratorManager.cancel()
+
+                    db.labelDao().update(
+                        Label(
+                            labelSelected.value.id,
+                            labelSelected.value.name,
+                            labelSelected.value.color,
+                            labelSelected.value.dedicatedSeconds
+                        )
+                    )
+                    Log.d(
+                        "SUBIDOBD",
+                        labelSelected.value.id.toString() + labelSelected.value.name + labelSelected.value.color + labelSelected.value.dedicatedSeconds
+                    )
+                }
+
+            }
+
+            if (sensorValues.value > 20f && worked.value) {
+                db.labelDao().update(
+                    Label(
+                        labelSelected.value.id,
+                        labelSelected.value.name,
+                        labelSelected.value.color,
+                        labelSelected.value.dedicatedSeconds
+                    )
+                )
+                worked.value = false
+            }
+
+            if (sensorValues.value <= 20f && segundos.value > 0) {
+                delay(1.seconds)
+                segundos.value -= 1
+                labelSelected.value.dedicatedSeconds++
+                worked.value = true
             }
 
         }
 
-        if(sensorValues.value > 20f && worked.value){
-            db.labelDao().update(Label(labelSelected.value.id, labelSelected.value.name,labelSelected.value.color, labelSelected.value.dedicatedSeconds))
-            worked.value = false
-        }
+    } else {
+        // COUNTDOWN EN SI
+        LaunchedEffect(key1 = countdownRunning.value, key2 = segundos.value) {
 
-        if(sensorValues.value <= 20f && segundos.value > 0) {
-            delay(1.seconds)
-            segundos.value -= 1
-            labelSelected.value.dedicatedSeconds++
-            worked.value = true
-        }
+            Log.d("QUEASCO", segundos.value.toString())
+            Log.d("QUEASCO", minutos.value.toString())
+            Log.d("QUEASCO", horas.value.toString())
 
-    }*/
+            if (segundos.value == 0 && minutos.value >= 1) {
+                minutos.value -= 1
+                segundos.value += 60
+            }
+
+            if (minutos.value == 0 && horas.value >= 1) {
+                horas.value -= 1
+                minutos.value += 60
+            }
+
+            if (minutos.value == 0 && segundos.value == 0 && horas.value == 0) {
+
+                Log.d("TIMERBOOL", "Notificando vibracion: " + checkedVibration.value.toString())
+                Log.d("TIMERBOOL", "Notificando sonido: " + checkSound.value.toString())
+
+                if (checkedVibration.value) {
+                    if (vibratorManager.areAllPrimitivesSupported() && checkedVibration.value) {
+                        vibratorManager.vibrate(
+                            VibrationEffect.createWaveform(
+                                timings,
+                                amplitudes,
+                                repeatIndex
+                            )
+                        )
+                    } else {
+                        vibratorManager.vibrate(
+                            VibrationEffect.createOneShot(
+                                1000,
+                                50
+                            )
+
+                        )
+                    }
+                }
+
+                if (checkSound.value) ringtone.play()
+
+                if (!countdownRunning.value) {
+                    if (checkSound.value) ringtone.stop()
+                    if (checkedVibration.value) vibratorManager.cancel()
+
+                    db.labelDao().update(
+                        Label(
+                            labelSelected.value.id,
+                            labelSelected.value.name,
+                            labelSelected.value.color,
+                            labelSelected.value.dedicatedSeconds
+                        )
+                    )
+                    Log.d(
+                        "TIMERBOOL",
+                        labelSelected.value.id.toString() + labelSelected.value.name + labelSelected.value.color + labelSelected.value.dedicatedSeconds
+                    )
+                }
+
+            }
+
+            if (!countdownRunning.value && worked.value) {
+
+                db.labelDao().update(
+                    Label(
+                        labelSelected.value.id,
+                        labelSelected.value.name,
+                        labelSelected.value.color,
+                        labelSelected.value.dedicatedSeconds
+                    )
+                )
+                worked.value = false
+            }
+
+            Log.d("TIMERBOOL", countdownRunning.value.toString())
+            Log.d("TIMERBOOL", segundos.value.toString())
+
+            if (countdownRunning.value && segundos.value > 0) {
+                delay(1.seconds)
+                segundos.value -= 1
+                labelSelected.value.dedicatedSeconds++
+                worked.value = true
+            }
+
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -254,78 +366,49 @@ fun TimerScreen(
             .padding(15.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val genders = listOf("Male", "Female")
+        val genders = listOf("Flip&Study", "Timer")
         SegmentedButton(
             items = genders,
-            defaultSelectedItemIndex = 0,
+            defaultSelectedItemIndex = if(modeFlipStudy.value) 0 else 1 ,
+            cornerRadius = 50,
+            color = MaterialTheme.colorScheme.primary,
+            useFixedWidth = true,
+            itemWidth = 150.dp
         ) {
-            Log.e("CustomToggle", "Selected item : ${genders[it]}")
+            Log.e("CustomToggle", "Selected item : ${genders[it]} $it")
+            modeFlipStudy.value = it == 0
         }
 
         Card(
             modifier = Modifier
                 .shadow(elevation = 5.dp, shape = AbsoluteRoundedCornerShape(20.dp))
                 .background(
-                    color = MaterialTheme.colorScheme.onBackground,
+                    color = MaterialTheme.colorScheme.surface,
                     shape = RoundedCornerShape(size = 12.dp)
                 )
                 .fillMaxWidth(),
             shape = AbsoluteRoundedCornerShape(20.dp)
-        ){
+        ) {
             Column(
-                verticalArrangement = Arrangement.spacedBy(0.dp,Alignment.CenterVertically),
+                verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterVertically),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(9.dp, Alignment.Start),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(top = 50.dp)
+                Box(
+                    modifier = Modifier
+                        .clickable(
+                        interactionSource = MutableInteractionSource(),
+                        indication = null
+                        ){ openModalBottomSheet.value = true }
+                        .align(Alignment.CenterHorizontally)
+                        .padding(vertical = 20.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        modifier = Modifier.size(35.dp),
-                        imageVector = Icons.Filled.Label,
-                        contentDescription = "Etiqueta",
-                        tint = colorEnumToColor(labelSelected.value.color)
-                    )
-                    Text(
-                        text = labelSelected.value.name,
-                        style = MaterialTheme.typography.displaySmall,
-                        modifier = Modifier.padding(horizontal = 5.dp)
-                    )
-                }
-
-                Text(
-                    text = "0:0:0",
-                    fontSize = 120.sp,
-                )
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(190.dp, Alignment.CenterHorizontally),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(top=30.dp)
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(start=10.dp)
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(45.dp),
-                            imageVector = Icons.Filled.Label,
-                            contentDescription = "Etiqueta",
-                            tint = colorEnumToColor(labelSelected.value.color)
-                        )
-                        Checkbox(
-                            checked = checkedState.value,
-                            onCheckedChange = { checkedState.value = !checkedState.value }
-                        )
-                    }
 
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterHorizontally),
+                        horizontalArrangement = Arrangement.spacedBy(9.dp, Alignment.Start),
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(end=10.dp)
+                        modifier = Modifier.padding(top = 50.dp)
                     ) {
                         Icon(
                             modifier = Modifier.size(35.dp),
@@ -333,9 +416,91 @@ fun TimerScreen(
                             contentDescription = "Etiqueta",
                             tint = colorEnumToColor(labelSelected.value.color)
                         )
+                        Text(
+                            text = labelSelected.value.name,
+                            style = MaterialTheme.typography.displaySmall,
+                            modifier = Modifier.padding(horizontal = 5.dp)
+                        )
+                    }
+                }
+
+                TextButton(
+                    onClick = {
+                        intsToCountdown(horas, minutos, segundos, countdown)
+                        openDialog.value = true
+                    },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+
+                    Text(
+                        text = horas.value.toString(),
+                        fontSize = 80.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = ":",
+                        fontSize = 80.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = minutos.value.toString(),
+                        fontSize = 80.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = ":",
+                        fontSize = 80.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = segundos.value.toString(),
+                        fontSize = 80.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(
+                        160.dp,
+                        Alignment.CenterHorizontally
+                    ),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(top = 30.dp)
+                        .padding(horizontal = 20.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(35.dp),
+                            imageVector = Icons.Filled.Vibration,
+                            contentDescription = "Etiqueta",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
                         Checkbox(
-                            checked = checkedState.value,
-                            onCheckedChange = { checkedState.value = !checkedState.value }
+                            checked = checkedVibration.value,
+                            onCheckedChange = { checkedVibration.value = !checkedVibration.value }
+                        )
+                    }
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .size(45.dp)
+                                .padding(end = 10.dp),
+                            imageVector = Icons.Filled.VolumeUp,
+                            contentDescription = "Etiqueta",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                        Checkbox(
+                            checked = checkSound.value,
+                            onCheckedChange = { checkSound.value = !checkSound.value }
                         )
                     }
                 }
@@ -346,35 +511,50 @@ fun TimerScreen(
         Row(
             horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.Start),
             verticalAlignment = Alignment.Top,
-            modifier = Modifier.padding(top=50.dp)
+            modifier = Modifier.padding(top = 50.dp)
         ) {
-            IconButton(
-                onClick = { /*TODO*/ },
-                modifier = Modifier.clip(CircleShape).size(99.dp),
-                colors = IconButtonDefaults.iconButtonColors(MaterialTheme.colorScheme.primary)
+
+            if (modeFlipStudy.value.not()) {
+
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary)
+                        .size(99.dp)
+                        .clickable { countdownRunning.value = !countdownRunning.value },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        modifier = Modifier.size(35.dp),
+                        imageVector = if (countdownRunning.value) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                        contentDescription = "Etiqueta",
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+
+            }
+
+            Box(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .size(99.dp)
+                    .clickable {
+                        intsToCountdown(horas, minutos, segundos, countdown)
+                        openDialog.value = true
+                    },
+                contentAlignment = Alignment.Center
             ) {
                 Icon(
                     modifier = Modifier.size(35.dp),
-                    imageVector = Icons.Filled.Label,
+                    imageVector = Icons.Filled.Edit,
                     contentDescription = "Etiqueta",
-                    tint = colorEnumToColor(labelSelected.value.color)
-                )
-            }
-
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    modifier = Modifier.size(35.dp),
-                    imageVector = Icons.Filled.Label,
-                    contentDescription = "Etiqueta",
-                    tint = colorEnumToColor(labelSelected.value.color)
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
 
         }
     }
-
-
-
 
 
     /*Column(
@@ -522,7 +702,7 @@ fun TimerScreen(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun viewWithVariables(){
+fun viewWithVariables() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -546,7 +726,7 @@ fun viewWithVariables(){
                 .fillMaxWidth()
                 .height(415.dp),
             shape = AbsoluteRoundedCornerShape(20.dp)
-        ){
+        ) {
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -574,7 +754,10 @@ fun viewWithVariables(){
                 )
 
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(190.dp, Alignment.CenterHorizontally),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        190.dp,
+                        Alignment.CenterHorizontally
+                    ),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Row(
@@ -594,7 +777,10 @@ fun viewWithVariables(){
                     }
 
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterHorizontally),
+                        horizontalArrangement = Arrangement.spacedBy(
+                            5.dp,
+                            Alignment.CenterHorizontally
+                        ),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(

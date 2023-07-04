@@ -2,7 +2,7 @@ package com.example.flipstudy.ui.screens
 
 import android.media.Ringtone
 import android.os.Build
-import android.os.VibratorManager
+import android.os.Vibrator
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -20,7 +20,7 @@ fun MainScreen(
     db: LabelDatabase,
     sensorAvailability: MutableState<Boolean>,
     sensorValues: MutableState<Float>,
-    vibratorManager: VibratorManager,
+    vibratorManager: Vibrator,
     ringtone: Ringtone,
 ) {
     val navController = rememberNavController()

@@ -2,7 +2,7 @@ package com.example.flipstudy.ui.navigation
 
 import android.media.Ringtone
 import android.os.Build
-import android.os.VibratorManager
+import android.os.Vibrator
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -23,12 +23,12 @@ fun AppNavigation(
     db: LabelDatabase,
     sensorAvailability: MutableState<Boolean>,
     sensorValues: MutableState<Float>,
-    vibratorManager: VibratorManager,
+    vibratorManager: Vibrator,
     ringtone: Ringtone,
 ){
     NavHost(navController = navController, startDestination = Screens.Timer.route, modifier){
         composable(Screens.Settings.route) { SettingsScreen(navController) }
         composable(Screens.Timer.route) { TimerScreen(navController, db, sensorAvailability, sensorValues, vibratorManager, ringtone) }
-        composable(Screens.Statistics.route) { StatisticsScreen(navController) }
+        composable(Screens.Statistics.route) { StatisticsScreen(navController, db) }
     }
 }
