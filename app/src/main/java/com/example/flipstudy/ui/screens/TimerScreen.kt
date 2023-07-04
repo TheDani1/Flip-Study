@@ -1,5 +1,6 @@
 package com.example.flipstudy.ui.screens
 
+import android.content.res.Configuration
 import android.media.Ringtone
 import android.os.Build
 import android.os.VibrationEffect
@@ -13,9 +14,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
@@ -31,7 +32,6 @@ import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -44,9 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.flipstudy.R
@@ -138,6 +136,7 @@ fun TimerScreen(
     sensorValues: MutableState<Float>,
     vibratorManager: Vibrator,
     ringtone: Ringtone,
+    orientation: Int,
 ) {
 
     val checkedVibration = rememberSaveable { mutableStateOf(true) }
@@ -217,7 +216,6 @@ fun TimerScreen(
                     }
                 }
 
-                // TODO
                 if (checkSound.value) ringtone.play()
 
                 if (sensorValues.value > 20f) {
@@ -352,289 +350,270 @@ fun TimerScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(15.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        val genders = listOf("Flip&Study", stringResource(R.string.timer_segmentedbutton))
-        SegmentedButton(
-            items = genders,
-            defaultSelectedItemIndex = if(modeFlipStudy.value) 0 else 1 ,
-            cornerRadius = 50,
-            color = MaterialTheme.colorScheme.primary,
-            useFixedWidth = true,
-            itemWidth = 150.dp
-        ) {
-            Log.e("CustomToggle", "Selected item : ${genders[it]} $it")
-            modeFlipStudy.value = it == 0
-        }
+    if(orientation == Configuration.ORIENTATION_LANDSCAPE){
 
-        Card(
+        LandscapeView(modeFlipStudy, countdownRunning, countdown, checkSound, checkedVibration, horas, minutos, segundos, openDialog, labelSelected, openModalBottomSheet )
+
+    }else {
+
+
+        Column(
             modifier = Modifier
-                .shadow(elevation = 5.dp, shape = AbsoluteRoundedCornerShape(20.dp))
-                .background(
-                    color = MaterialTheme.colorScheme.surface,
-                    shape = RoundedCornerShape(size = 12.dp)
-                )
-                .fillMaxWidth(),
-            shape = AbsoluteRoundedCornerShape(20.dp)
+                .fillMaxSize()
+                .padding(15.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterVertically),
-                horizontalAlignment = Alignment.CenterHorizontally,
+            val options = listOf("Flip&Study", stringResource(R.string.timer_segmentedbutton))
+            SegmentedButton(
+                items = options,
+                defaultSelectedItemIndex = if (modeFlipStudy.value) 0 else 1,
+                cornerRadius = 50,
+                color = MaterialTheme.colorScheme.primary,
+                useFixedWidth = true,
+                itemWidth = 150.dp
             ) {
+                Log.e("CustomToggle", "Selected item : ${options[it]} $it")
+                modeFlipStudy.value = it == 0
+            }
 
-                Box(
-                    modifier = Modifier
-                        .clickable(
-                        interactionSource = MutableInteractionSource(),
-                        indication = null
-                        ){ openModalBottomSheet.value = true }
-                        .align(Alignment.CenterHorizontally)
-                        .padding(vertical = 20.dp),
-                    contentAlignment = Alignment.Center
+            Card(
+                modifier = Modifier
+                    .shadow(elevation = 5.dp, shape = AbsoluteRoundedCornerShape(20.dp))
+                    .background(
+                        color = MaterialTheme.colorScheme.surface,
+                        shape = RoundedCornerShape(size = 12.dp)
+                    )
+                    .fillMaxWidth(),
+                shape = AbsoluteRoundedCornerShape(20.dp)
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterVertically),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
 
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(9.dp, Alignment.Start),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(top = 50.dp)
+                    Box(
+                        modifier = Modifier
+                            .clickable(
+                                interactionSource = MutableInteractionSource(),
+                                indication = null
+                            ) { openModalBottomSheet.value = true }
+                            .align(Alignment.CenterHorizontally)
+                            .padding(vertical = 20.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            modifier = Modifier.size(35.dp),
-                            imageVector = Icons.Filled.Label,
-                            contentDescription = "Etiqueta",
-                            tint = colorEnumToColor(labelSelected.value.color)
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(9.dp, Alignment.Start),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(top = 50.dp)
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(35.dp),
+                                imageVector = Icons.Filled.Label,
+                                contentDescription = "Etiqueta",
+                                tint = colorEnumToColor(labelSelected.value.color)
+                            )
+                            Text(
+                                text = labelSelected.value.name,
+                                style = MaterialTheme.typography.displaySmall,
+                                modifier = Modifier.padding(horizontal = 5.dp)
+                            )
+                        }
+                    }
+
+                    TextButton(
+                        onClick = {
+                            countdownRunning.value = false
+                            intsToCountdown(horas, minutos, segundos, countdown)
+                            openDialog.value = true
+                        },
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    ) {
+
+                        Text(
+                            text = horas.value.toString(),
+                            fontSize = 80.sp,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = labelSelected.value.name,
-                            style = MaterialTheme.typography.displaySmall,
-                            modifier = Modifier.padding(horizontal = 5.dp)
+                            text = ":",
+                            fontSize = 80.sp,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
+                        Text(
+                            text = minutos.value.toString(),
+                            fontSize = 80.sp,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = ":",
+                            fontSize = 80.sp,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = segundos.value.toString(),
+                            fontSize = 80.sp,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+
                     }
-                }
 
-                TextButton(
-                    onClick = {
-                        countdownRunning.value = false
-                        intsToCountdown(horas, minutos, segundos, countdown)
-                        openDialog.value = true
-                    },
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                ) {
-
-                    Text(
-                        text = horas.value.toString(),
-                        fontSize = 80.sp,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = ":",
-                        fontSize = 80.sp,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = minutos.value.toString(),
-                        fontSize = 80.sp,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = ":",
-                        fontSize = 80.sp,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = segundos.value.toString(),
-                        fontSize = 80.sp,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-
-                }
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(
-                        160.dp,
-                        Alignment.CenterHorizontally
-                    ),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(top = 30.dp)
-                        .padding(horizontal = 20.dp)
-                ) {
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start),
+                        horizontalArrangement = Arrangement.spacedBy(
+                            160.dp,
+                            Alignment.CenterHorizontally
+                        ),
                         verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(top = 30.dp)
+                            .padding(horizontal = 20.dp)
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(35.dp),
+                                imageVector = Icons.Filled.Vibration,
+                                contentDescription = "Etiqueta",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                            Checkbox(
+                                checked = checkedVibration.value,
+                                onCheckedChange = {
+                                    checkedVibration.value = !checkedVibration.value
+                                }
+                            )
+                        }
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(
+                                modifier = Modifier
+                                    .size(45.dp)
+                                    .padding(end = 10.dp),
+                                imageVector = Icons.Filled.VolumeUp,
+                                contentDescription = "Etiqueta",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                            Checkbox(
+                                checked = checkSound.value,
+                                onCheckedChange = { checkSound.value = !checkSound.value }
+                            )
+                        }
+                    }
+
+                }
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.Start),
+                verticalAlignment = Alignment.Top,
+                modifier = Modifier.padding(top = 50.dp)
+            ) {
+
+                if (modeFlipStudy.value.not()) {
+
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary)
+                            .size(99.dp)
+                            .clickable { countdownRunning.value = !countdownRunning.value },
+                        contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             modifier = Modifier.size(35.dp),
-                            imageVector = Icons.Filled.Vibration,
+                            imageVector = if (countdownRunning.value) Icons.Filled.Pause else Icons.Filled.PlayArrow,
                             contentDescription = "Etiqueta",
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
-                        Checkbox(
-                            checked = checkedVibration.value,
-                            onCheckedChange = { checkedVibration.value = !checkedVibration.value }
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
 
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(
-                            modifier = Modifier
-                                .size(45.dp)
-                                .padding(end = 10.dp),
-                            imageVector = Icons.Filled.VolumeUp,
-                            contentDescription = "Etiqueta",
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
-                        Checkbox(
-                            checked = checkSound.value,
-                            onCheckedChange = { checkSound.value = !checkSound.value }
-                        )
-                    }
                 }
-
-            }
-        }
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.Start),
-            verticalAlignment = Alignment.Top,
-            modifier = Modifier.padding(top = 50.dp)
-        ) {
-
-            if (modeFlipStudy.value.not()) {
 
                 Box(
                     modifier = Modifier
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.primary)
                         .size(99.dp)
-                        .clickable { countdownRunning.value = !countdownRunning.value },
+                        .clickable {
+                            intsToCountdown(horas, minutos, segundos, countdown)
+                            openDialog.value = true
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         modifier = Modifier.size(35.dp),
-                        imageVector = if (countdownRunning.value) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                        imageVector = Icons.Filled.Edit,
                         contentDescription = "Etiqueta",
                         tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
 
             }
-
-            Box(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary)
-                    .size(99.dp)
-                    .clickable {
-                        intsToCountdown(horas, minutos, segundos, countdown)
-                        openDialog.value = true
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    modifier = Modifier.size(35.dp),
-                    imageVector = Icons.Filled.Edit,
-                    contentDescription = "Etiqueta",
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
-            }
-
         }
     }
+}
 
+@Composable
+fun LandscapeView(
+    modeFlipStudy: MutableState<Boolean>,
+    countdownRunning: MutableState<Boolean>,
+    countdown: MutableState<String>,
+    checkSound: MutableState<Boolean>,
+    checkedVibration: MutableState<Boolean>,
+    horas: MutableState<Int>,
+    minutos: MutableState<Int>,
+    segundos: MutableState<Int>,
+    openDialog: MutableState<Boolean>,
+    labelSelected: MutableState<Label>,
+    openModalBottomSheet: MutableState<Boolean>
+) {
 
-    /*Column(
+    Row(
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.Top,
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp), horizontalAlignment = Alignment.End
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background)
+            .padding(start = 20.dp, top = 20.dp, bottom = 20.dp)
     ) {
-        val genders = listOf("Male", "Female")
-        SegmentedButton(
-            items = genders,
-            defaultSelectedItemIndex = 0
-        ) {
-            Log.e("CustomToggle", "Selected item : ${genders[it]}")
-        }
-
-        Icon(
-            painter = painterResource(id = R.drawable.subtract),
-            contentDescription = "image description",
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .size(200.dp),
-            tint = MaterialTheme.colorScheme.surfaceTint
-        )
-
         Card(
             modifier = Modifier
-                .fillMaxWidth()
                 .shadow(elevation = 5.dp, shape = AbsoluteRoundedCornerShape(20.dp))
-                .fillMaxHeight()
                 .background(
-                    color = MaterialTheme.colorScheme.onBackground,
-                    shape = RoundedCornerShape(size = 20.dp)
-                ),
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = RoundedCornerShape(size = 12.dp)
+                ).fillMaxHeight(),
             shape = AbsoluteRoundedCornerShape(20.dp)
-        ) {
-            Box(Modifier.fillMaxSize()) {
-
+        ){
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Column(
-                    Modifier
-                        .align(Alignment.TopStart)
-                        .padding(10.dp)
+                    verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterVertically),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-
-                    TextButton(
-                        onClick = {
-                            intsToCountdown(horas, minutos, segundos, countdown)
-                            openDialog.value = true
-                        },
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    ) {
-                        Text(
-                            text = horas.value.toString(),
-                            style = MaterialTheme.typography.displayLarge,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = ":",
-                            style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.tertiary
-                        )
-                        Text(
-                            text = minutos.value.toString(),
-                            style = MaterialTheme.typography.displayLarge,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = ":",
-                            style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.tertiary
-                        )
-                        Text(
-                            text = segundos.value.toString(),
-                            style = MaterialTheme.typography.displayLarge,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-
-                    Divider()
 
                     Box(
                         modifier = Modifier
-                            .clickable { openModalBottomSheet.value = true }
-                            .align(Alignment.CenterHorizontally)
-                            .padding(vertical = 20.dp),
+                            .clickable(
+                                interactionSource = MutableInteractionSource(),
+                                indication = null
+                            ) { openModalBottomSheet.value = true }
+                            .align(Alignment.CenterHorizontally),
                         contentAlignment = Alignment.Center
                     ) {
-                        Row() {
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(9.dp, Alignment.Start),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(top = 40.dp)
+                        ) {
                             Icon(
                                 modifier = Modifier.size(35.dp),
                                 imageVector = Icons.Filled.Label,
@@ -649,171 +628,156 @@ fun TimerScreen(
                         }
                     }
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                    TextButton(
+                        onClick = {
+                            countdownRunning.value = false
+                            intsToCountdown(horas, minutos, segundos, countdown)
+                            openDialog.value = true
+                        },
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
 
-                        Icon(
-                            imageVector = Icons.Filled.Vibration,
-                            contentDescription = "Vibrar"
+                        Text(
+                            text = horas.value.toString(),
+                            style = MaterialTheme.typography.displayLarge,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = "Vibrar",
-                            style = MaterialTheme.typography.titleLarge,
-                        )
-
-                        Checkbox(
-                            checked = checkedState.value,
-                            onCheckedChange = { checkedState.value = !checkedState.value }
-                        )
-
-                        Icon(
-                            imageVector = Icons.Filled.VolumeUp,
-                            contentDescription = "Sonido"
+                            text = ":",
+                            style = MaterialTheme.typography.displayLarge,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = "Sonido",
-                            style = MaterialTheme.typography.titleLarge,
+                            text = minutos.value.toString(),
+                            style = MaterialTheme.typography.displayLarge,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = ":",
+                            style = MaterialTheme.typography.displayLarge,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = segundos.value.toString(),
+                            style = MaterialTheme.typography.displayLarge,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
 
-                        Checkbox(
-                            checked = checkedState.value,
-                            onCheckedChange = { checkedState.value = !checkedState.value }
-                        )
-                    }
-
-                }
-            }
-
-
-        }
-
-    }*/
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun ViewWithVariables() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(20.dp)
-    ) {
-        val genders = listOf("Male", "Female")
-        SegmentedButton(
-            items = genders,
-            defaultSelectedItemIndex = 0
-        ) {
-            Log.e("CustomToggle", "Selected item : ${genders[it]}")
-        }
-
-        Card(
-            modifier = Modifier
-                .shadow(elevation = 5.dp, shape = AbsoluteRoundedCornerShape(20.dp))
-                .background(
-                    color = MaterialTheme.colorScheme.onBackground,
-                    shape = RoundedCornerShape(size = 12.dp)
-                )
-                .fillMaxWidth()
-                .height(415.dp),
-            shape = AbsoluteRoundedCornerShape(20.dp)
-        ) {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(9.dp, Alignment.Start),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        modifier = Modifier.size(35.dp),
-                        imageVector = Icons.Filled.Label,
-                        contentDescription = "Etiqueta",
-                        tint = /*colorEnumToColor(labelSelected.value.color)*/Color.Magenta
-                    )
-                    Text(
-                        text = /*labelSelected.value.name*/"Unlabelled",
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(horizontal = 5.dp)
-                    )
-                }
-
-                Text(
-                    text = "0:0:0",
-                    fontSize = 120.sp,
-                )
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(
-                        190.dp,
-                        Alignment.CenterHorizontally
-                    ),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(35.dp),
-                            imageVector = Icons.Filled.Label,
-                            contentDescription = "Etiqueta",
-                            tint = /*colorEnumToColor(labelSelected.value.color)*/Color.Magenta
-                        )
-                        Checkbox(
-                            checked = /*checkedState.value*/true,
-                            onCheckedChange = { /*checkedState.value = !checkedState.value*/ }
-                        )
                     }
 
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(
-                            5.dp,
+                            160.dp,
                             Alignment.CenterHorizontally
                         ),
                         verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(horizontal = 20.dp)
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(35.dp),
+                                imageVector = Icons.Filled.Vibration,
+                                contentDescription = "Etiqueta",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                            Checkbox(
+                                checked = checkedVibration.value,
+                                onCheckedChange = {
+                                    checkedVibration.value = !checkedVibration.value
+                                }
+                            )
+                        }
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(
+                                modifier = Modifier
+                                    .size(45.dp)
+                                    .padding(end = 10.dp),
+                                imageVector = Icons.Filled.VolumeUp,
+                                contentDescription = "Etiqueta",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                            Checkbox(
+                                checked = checkSound.value,
+                                onCheckedChange = { checkSound.value = !checkSound.value }
+                            )
+                        }
+                    }
+
+
+                }
+            }
+        }
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            val options = listOf("Flip&Study", stringResource(R.string.timer_segmentedbutton))
+            SegmentedButton(
+                items = options,
+                defaultSelectedItemIndex = if (modeFlipStudy.value) 0 else 1,
+                cornerRadius = 50,
+                color = MaterialTheme.colorScheme.primary,
+                useFixedWidth = true,
+                itemWidth = 150.dp
+            ) {
+                Log.e("CustomToggle", "Selected item : ${options[it]} $it")
+                modeFlipStudy.value = it == 0
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.Start),
+                verticalAlignment = Alignment.Top,
+            ) {
+                if (modeFlipStudy.value.not()) {
+
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary)
+                            .size(70.dp)
+                            .clickable { countdownRunning.value = !countdownRunning.value },
+                        contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             modifier = Modifier.size(35.dp),
-                            imageVector = Icons.Filled.Label,
+                            imageVector = if (countdownRunning.value) Icons.Filled.Pause else Icons.Filled.PlayArrow,
                             contentDescription = "Etiqueta",
-                            tint = /*colorEnumToColor(labelSelected.value.color)*/Color.Magenta
-                        )
-                        Checkbox(
-                            checked = /*checkedState.value*/true,
-                            onCheckedChange = { /*checkedState.value = !checkedState.value*/ }
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
+
                 }
 
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary)
+                        .size(70.dp)
+                        .clickable {
+                            intsToCountdown(horas, minutos, segundos, countdown)
+                            openDialog.value = true
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        modifier = Modifier.size(35.dp),
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = "Etiqueta",
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
             }
-        }
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.Start),
-            verticalAlignment = Alignment.Top,
-        ) {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    modifier = Modifier.size(35.dp),
-                    imageVector = Icons.Filled.Label,
-                    contentDescription = "Etiqueta",
-                    tint = /*colorEnumToColor(labelSelected.value.color)*/Color.Magenta
-                )
-            }
-
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    modifier = Modifier.size(35.dp),
-                    imageVector = Icons.Filled.Label,
-                    contentDescription = "Etiqueta",
-                    tint = /*colorEnumToColor(labelSelected.value.color)*/Color.Magenta
-                )
-            }
-
         }
     }
+
 }

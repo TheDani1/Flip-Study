@@ -17,6 +17,7 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalConfiguration
 import com.example.flipstudy.ui.label.data.LabelDatabase
 import com.example.flipstudy.ui.screens.MainScreen
 import com.example.flipstudy.ui.theme.FlipStudyTheme
@@ -82,8 +83,10 @@ class MainActivity : ComponentActivity() {
                 val db = LabelDatabase.getInstance(applicationContext)
                 Log.d("QUEASCO", "Main")
 
+                val orientation = LocalConfiguration.current.orientation
 
-                MainScreen(db, sensorValues, vibrator, ringtone)
+
+                MainScreen(db, sensorValues, vibrator, ringtone, orientation)
             }
         }
     }

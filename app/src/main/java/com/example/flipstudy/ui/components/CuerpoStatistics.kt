@@ -1,9 +1,13 @@
 package com.example.flipstudy.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -66,13 +70,86 @@ fun <T> CuerpoStatistics(
             shape = CutCornerShape(0.dp),
             modifier = Modifier.fillMaxHeight()
         ) {
-            Column(modifier = Modifier
-                .padding(12.dp)
-                .verticalScroll(rememberScrollState())) {
+            Column(
+                modifier = Modifier
+                    .padding(12.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
                 items.forEach { item ->
                     rows(item)
                 }
             }
         }
     }
+}
+
+@Composable
+fun <T> CuerpoStatisticsLandscape(
+    items: List<T>,
+    colors: (T) -> Color,
+    amounts: (T) -> Int,
+    amountsTotal: Int,
+    circleLabel: String,
+    rows: @Composable (T) -> Unit
+) {
+
+    Row(
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.Top,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background)
+            .padding(start = 20.dp, top = 20.dp, bottom = 20.dp)
+    ) {
+        Box() {
+            val accountsProportion = items.extractProportions { amounts(it).toFloat() }
+            val circleColors = items.map { colors(it) }
+            AnimatedCircle(
+                accountsProportion,
+                circleColors,
+                Modifier
+                    .height(300.dp)
+                    .align(Alignment.Center)
+                    .fillMaxWidth()
+            )
+            Column(modifier = Modifier.align(Alignment.Center)) {
+                Text(
+                    text = circleLabel,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+                Text(
+                    text = amountsTotal.seconds.toString(),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+            ) {
+                items.forEach { item ->
+                    rows(item)
+                }
+            }
+
+            /*Column(
+                modifier = Modifier
+                    .padding(12.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                items.forEach { item ->
+                    rows(item)
+                }
+            }*/
+        }
+
+
+    }
+
+
+
 }

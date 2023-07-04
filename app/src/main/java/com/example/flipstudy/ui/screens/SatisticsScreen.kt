@@ -1,5 +1,6 @@
 package com.example.flipstudy.ui.screens
 
+import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,10 +29,51 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.flipstudy.R
 import com.example.flipstudy.ui.components.CuerpoStatistics
+import com.example.flipstudy.ui.components.CuerpoStatisticsLandscape
 import com.example.flipstudy.ui.label.data.Label
 import com.example.flipstudy.ui.label.data.LabelDatabase
 import com.example.flipstudy.ui.label.data.colorEnumToColor
 import kotlin.time.Duration.Companion.seconds
+
+@Composable
+fun BlankScreenLandscape() {
+
+    Box(
+        Modifier
+            .fillMaxSize()
+            .padding(16.dp)) {
+
+        Row(modifier = Modifier.align(Alignment.Center)) {
+
+            Icon(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "image description",
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .size(200.dp),
+                tint = MaterialTheme.colorScheme.surfaceTint
+            )
+
+            Text(
+                text = stringResource(R.string.flip_and_study_more),
+                style = MaterialTheme.typography.displayMedium,
+                color = MaterialTheme.colorScheme.surfaceTint,
+                textAlign = TextAlign.Center
+            )
+
+            Text(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                text = stringResource(R.string.no_statistics_data),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.surfaceTint,
+                textAlign = TextAlign.Center
+            )
+
+        }
+
+    }
+
+}
 
 @Preview
 @Composable
@@ -75,7 +117,7 @@ fun BlankScreen() {
 }
 
 @Composable
-fun StatisticsScreen(db: LabelDatabase) {
+fun StatisticsScreen(db: LabelDatabase, orientation: Int) {
 
     val reals = remember { mutableStateListOf<Label>().apply {
         addAll(db.labelDao().getAllLabels())
@@ -85,54 +127,110 @@ fun StatisticsScreen(db: LabelDatabase) {
 
     val amountsTotal = remember { reals.sumOf { label -> label.dedicatedSeconds } }
 
-    if (amountsTotal <= 0) {
+    if(orientation == Configuration.ORIENTATION_LANDSCAPE){
 
-        BlankScreen()
+        if (amountsTotal <= 0) {
 
-    } else {
+            BlankScreenLandscape()
 
-        CuerpoStatistics(
-            items = reals,
-            colors = { label -> colorEnumToColor(label.color) },
-            amounts = { label -> label.dedicatedSeconds },
-            amountsTotal = amountsTotal,
-            circleLabel = "Total"
-        ) { label ->
-            Row {
-                Box(
-                    modifier = Modifier
-                        .height(75.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
+        }else {
+
+            CuerpoStatisticsLandscape(
+                items = reals,
+                colors = { label -> colorEnumToColor(label.color) },
+                amounts = { label -> label.dedicatedSeconds },
+                amountsTotal = amountsTotal,
+                circleLabel = "Total"
+            ) { label ->
+                Row {
+                    Box(
+                        modifier = Modifier
+                            .height(75.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Row {
-                            Icon(
-                                Icons.Filled.Label,
-                                contentDescription = "Localized description",
-                                tint = colorEnumToColor(label.color),
-                                modifier = Modifier.absolutePadding(left = 12.dp)
-                            )
-                            Text(
-                                label.name,
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.absolutePadding(left = 12.dp)
-                            )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Row {
+                                Icon(
+                                    Icons.Filled.Label,
+                                    contentDescription = "Localized description",
+                                    tint = colorEnumToColor(label.color),
+                                    modifier = Modifier.absolutePadding(left = 12.dp)
+                                )
+                                Text(
+                                    label.name,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier.absolutePadding(left = 12.dp)
+                                )
 
-                            Text(
-                                label.dedicatedSeconds.seconds.toString(),
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.absolutePadding(left = 12.dp)
-                            )
+                                Text(
+                                    label.dedicatedSeconds.seconds.toString(),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier.absolutePadding(left = 12.dp)
+                                )
+                            }
+
                         }
-
                     }
                 }
+                //Divider(modifier = Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.outline)
             }
-            //Divider(modifier = Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.outline)
+        }
+
+    }else {
+
+        if (amountsTotal <= 0) {
+
+            BlankScreen()
+
+        }else {
+
+            CuerpoStatistics(
+                items = reals,
+                colors = { label -> colorEnumToColor(label.color) },
+                amounts = { label -> label.dedicatedSeconds },
+                amountsTotal = amountsTotal,
+                circleLabel = "Total"
+            ) { label ->
+                Row {
+                    Box(
+                        modifier = Modifier
+                            .height(75.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Row {
+                                Icon(
+                                    Icons.Filled.Label,
+                                    contentDescription = "Localized description",
+                                    tint = colorEnumToColor(label.color),
+                                    modifier = Modifier.absolutePadding(left = 12.dp)
+                                )
+                                Text(
+                                    label.name,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier.absolutePadding(left = 12.dp)
+                                )
+
+                                Text(
+                                    label.dedicatedSeconds.seconds.toString(),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier.absolutePadding(left = 12.dp)
+                                )
+                            }
+
+                        }
+                    }
+                }
+                //Divider(modifier = Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.outline)
+            }
         }
 
     }

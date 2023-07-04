@@ -23,9 +23,10 @@ fun AppNavigation(
     sensorValues: MutableState<Float>,
     vibratorManager: Vibrator,
     ringtone: Ringtone,
+    orientation: Int,
 ){
     NavHost(navController = navController, startDestination = Screens.Timer.route, modifier){
-        composable(Screens.Timer.route) { TimerScreen(db, sensorValues, vibratorManager, ringtone) }
-        composable(Screens.Statistics.route) { StatisticsScreen(db) }
+        composable(Screens.Timer.route) { TimerScreen(db, sensorValues, vibratorManager, ringtone, orientation) }
+        composable(Screens.Statistics.route) { StatisticsScreen(db, orientation) }
     }
 }

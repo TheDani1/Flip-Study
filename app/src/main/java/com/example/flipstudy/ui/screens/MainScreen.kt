@@ -21,11 +21,12 @@ fun MainScreen(
     sensorValues: MutableState<Float>,
     vibratorManager: Vibrator,
     ringtone: Ringtone,
+    orientation: Int,
 ) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomNavigation(navController = navController) }
     ) {innerPadding ->
-        AppNavigation(navController, Modifier.padding(innerPadding), db, sensorValues, vibratorManager, ringtone)
+        AppNavigation(navController, Modifier.padding(innerPadding), db, sensorValues, vibratorManager, ringtone, orientation)
     }
 }
