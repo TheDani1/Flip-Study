@@ -83,12 +83,8 @@ class MainActivity : ComponentActivity() {
                 Log.d("QUEASCO", "Main")
 
 
-                MainScreen(db, sensorAvailability , sensorValues, vibrator, ringtone)
+                MainScreen(db, sensorValues, vibrator, ringtone)
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 }

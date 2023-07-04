@@ -41,7 +41,7 @@ fun CountdownSetterDialog(
 
     if (openDialog.value) {
 
-        var countdown_copy = remember { mutableStateOf(if (countdown.value.toInt() == 0) "" else countdown.value.toInt().toString()) }
+        val countdownCopy = remember { mutableStateOf(if (countdown.value.toInt() == 0) "" else countdown.value.toInt().toString()) }
 
         val haptic = LocalHapticFeedback.current
 
@@ -63,34 +63,34 @@ fun CountdownSetterDialog(
                 ) {
                     item {
                         Text(
-                            text = horas(countdown_copy),
+                            text = horas(countdownCopy),
                             style = MaterialTheme.typography.displayLarge,
-                            color = if(countdown_copy.value.length >= 5 ) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurfaceVariant
+                            color = if(countdownCopy.value.length >= 5 ) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
                             text = "h",
                             style = MaterialTheme.typography.titleLarge,
-                            color = if(countdown_copy.value.length >= 5 ) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurfaceVariant
+                            color = if(countdownCopy.value.length >= 5 ) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = minutos(countdown_copy),
+                            text = minutos(countdownCopy),
                             style = MaterialTheme.typography.displayLarge,
-                            color = if(countdown_copy.value.length >= 3 ) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurfaceVariant
+                            color = if(countdownCopy.value.length >= 3 ) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
                             text = "m",
                             style = MaterialTheme.typography.titleLarge,
-                            color = if(countdown_copy.value.length >= 3 ) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurfaceVariant
+                            color = if(countdownCopy.value.length >= 3 ) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = segundos(countdown_copy),
+                            text = segundos(countdownCopy),
                             style = MaterialTheme.typography.displayLarge,
-                            color = if(countdown_copy.value.isNotEmpty()) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurfaceVariant
+                            color = if(countdownCopy.value.isNotEmpty()) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
                             text = "s",
                             style = MaterialTheme.typography.titleLarge,
-                            color = if(countdown_copy.value.isNotEmpty()) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurfaceVariant
+                            color = if(countdownCopy.value.isNotEmpty()) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -109,10 +109,10 @@ fun CountdownSetterDialog(
                             modifier = Modifier.aspectRatio(1f),
                             onClick = {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                if(!(action.text == "0" && countdown_copy.value.isEmpty()) && action.text != "delete" && countdown_copy.value.length <= 5){
-                                    countdown_copy.value += action.text
+                                if(!(action.text == "0" && countdownCopy.value.isEmpty()) && action.text != "delete" && countdownCopy.value.length <= 5){
+                                    countdownCopy.value += action.text
                                 }else if(action.text == "delete"){
-                                    countdown_copy.value = countdown_copy.value.dropLast(1)
+                                    countdownCopy.value = countdownCopy.value.dropLast(1)
 
                                 }
                             }
@@ -125,9 +125,9 @@ fun CountdownSetterDialog(
                     onClick = {
                         openDialog.value = false
 
-                        var horasD = horas(countdown_copy).toInt()
-                        var minutosD = minutos(countdown_copy).toInt()
-                        var segundosD = segundos(countdown_copy).toInt()
+                        var horasD = horas(countdownCopy).toInt()
+                        var minutosD = minutos(countdownCopy).toInt()
+                        var segundosD = segundos(countdownCopy).toInt()
 
                         horasD += minutosD/60
                         minutosD += segundosD/60

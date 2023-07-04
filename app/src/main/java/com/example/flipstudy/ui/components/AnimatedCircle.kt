@@ -34,7 +34,7 @@ fun AnimatedCircle(
             .apply { targetState = AnimatedCircleProgress.END }
     }
     val stroke = with(LocalDensity.current) { Stroke(50.dp.toPx()) }
-    val transition = updateTransition(currentState)
+    val transition = updateTransition(currentState, label = "")
     val angleOffset by transition.animateFloat(
         transitionSpec = {
             tween(

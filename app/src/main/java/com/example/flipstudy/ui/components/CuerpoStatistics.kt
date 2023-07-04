@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CutCornerShape
@@ -28,7 +27,6 @@ fun <E> List<E>.extractProportions(selector: (E) -> Float): List<Float> {
 
 @Composable
 fun <T> CuerpoStatistics(
-    modifier: Modifier = Modifier,
     items: List<T>,
     colors: (T) -> Color,
     amounts: (T) -> Int,
@@ -36,7 +34,7 @@ fun <T> CuerpoStatistics(
     circleLabel: String,
     rows: @Composable (T) -> Unit
 ) {
-    Column() {
+    Column {
         Box(Modifier.padding(16.dp)) {
             val accountsProportion = items.extractProportions { amounts(it).toFloat() }
             val circleColors = items.map { colors(it) }

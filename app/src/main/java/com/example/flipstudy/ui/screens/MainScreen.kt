@@ -18,7 +18,6 @@ import com.example.flipstudy.ui.navigation.AppNavigation
 @Composable
 fun MainScreen(
     db: LabelDatabase,
-    sensorAvailability: MutableState<Boolean>,
     sensorValues: MutableState<Float>,
     vibratorManager: Vibrator,
     ringtone: Ringtone,
@@ -27,6 +26,6 @@ fun MainScreen(
     Scaffold(
         bottomBar = { BottomNavigation(navController = navController) }
     ) {innerPadding ->
-        AppNavigation(navController, Modifier.padding(innerPadding), db, sensorAvailability, sensorValues, vibratorManager, ringtone)
+        AppNavigation(navController, Modifier.padding(innerPadding), db, sensorValues, vibratorManager, ringtone)
     }
 }

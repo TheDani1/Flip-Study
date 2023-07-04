@@ -2,7 +2,6 @@ package com.example.flipstudy.ui.screens
 
 import android.media.Ringtone
 import android.os.Build
-import android.os.CombinedVibration
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
@@ -40,7 +39,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,7 +48,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.example.flipstudy.ui.components.CountdownActions
 import com.example.flipstudy.ui.components.CountdownSetterDialog
 import com.example.flipstudy.ui.components.SegmentedButton
@@ -74,30 +71,26 @@ fun intsToCountdown(
     var copym = minutos.value
     var copys = segundos.value
 
-    var horasString = ""
-    var minutosString = ""
-    var segundosString = ""
-
     copyh += copym / 60
     copym += copys / 60
 
     copym %= 60
     copys %= 60
 
-    horasString = if (copyh < 9) {
+    val horasString: String = if (copyh < 9) {
         "0$copyh"
     } else {
         copyh.toString()
     }
 
-    minutosString = if (copym < 9) {
+    val minutosString: String = if (copym < 9) {
         "0$copym"
 
     } else {
         copym.toString()
     }
 
-    segundosString = if (copys < 9) {
+    val segundosString: String = if (copys < 9) {
         "0$copys"
     } else {
         copys.toString()
@@ -107,60 +100,57 @@ fun intsToCountdown(
 }
 
 fun segundos(tiempo: MutableState<String>): String {
-    if (tiempo.value.length >= 2) {
-        return tiempo.value.takeLast(2)
+    return if (tiempo.value.length >= 2) {
+        tiempo.value.takeLast(2)
     } else if (tiempo.value.length == 1) {
-        return "0" + tiempo.value.takeLast(1)
+        "0" + tiempo.value.takeLast(1)
     } else {
-        return "00"
+        "00"
     }
 }
 
 fun minutos(tiempo: MutableState<String>): String {
-    if (tiempo.value.length >= 4) {
-        return tiempo.value.takeLast(4).take(2)
+    return if (tiempo.value.length >= 4) {
+        tiempo.value.takeLast(4).take(2)
     } else if (tiempo.value.length == 3) {
-        return "0" + tiempo.value.takeLast(3).take(1)
+        "0" + tiempo.value.takeLast(3).take(1)
     } else {
-        return "00"
+        "00"
     }
 }
 
 fun horas(tiempo: MutableState<String>): String {
-    if (tiempo.value.length >= 6) {
-        return tiempo.value.takeLast(6).take(2)
+    return if (tiempo.value.length >= 6) {
+        tiempo.value.takeLast(6).take(2)
     } else if (tiempo.value.length == 5) {
-        return "0" + tiempo.value.takeLast(5).take(1)
+        "0" + tiempo.value.takeLast(5).take(1)
     } else {
-        return "00"
+        "00"
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun TimerScreen(
-    navController: NavController,
     db: LabelDatabase,
-    sensorAvailability: MutableState<Boolean>,
     sensorValues: MutableState<Float>,
     vibratorManager: Vibrator,
     ringtone: Ringtone,
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
 
-    var checkedVibration = rememberSaveable { mutableStateOf(true) }
+    val checkedVibration = rememberSaveable { mutableStateOf(true) }
 
-    var checkSound = rememberSaveable { mutableStateOf(true) }
+    val checkSound = rememberSaveable { mutableStateOf(true) }
 
     val openDialog = rememberSaveable { mutableStateOf(false) }
 
-    var countdown = rememberSaveable { mutableStateOf("000000") }
+    val countdown = rememberSaveable { mutableStateOf("000000") }
 
-    var worked = rememberSaveable { mutableStateOf(false) }
+    val worked = rememberSaveable { mutableStateOf(false) }
 
-    var horas = rememberSaveable { mutableStateOf(0) }
-    var minutos = rememberSaveable { mutableStateOf(59) }
-    var segundos = rememberSaveable { mutableStateOf(59) }
+    val horas = rememberSaveable { mutableStateOf(0) }
+    val minutos = rememberSaveable { mutableStateOf(59) }
+    val segundos = rememberSaveable { mutableStateOf(59) }
 
     // TODO
     val timings: LongArray = longArrayOf(50, 50, 50, 50, 50, 50, 50)
@@ -702,7 +692,7 @@ fun TimerScreen(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun viewWithVariables() {
+fun ViewWithVariables() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,

@@ -50,7 +50,7 @@ fun ModalBottomSheet(
 
     val assistives = remember { mutableStateListOf(db.labelDao().getAllLabels().toMutableList()) }
 
-    var reals = remember { mutableStateListOf<Label>().apply {
+    val reals = remember { mutableStateListOf<Label>().apply {
         addAll(db.labelDao().getAllLabels())
     } }
 
@@ -92,7 +92,7 @@ fun ModalBottomSheet(
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
-                                    Row() {
+                                    Row {
                                         Icon(
                                             Icons.Filled.Label,
                                             contentDescription = "Localized description",
@@ -128,7 +128,7 @@ fun ModalBottomSheet(
                                             reals.remove(real)
                                         }
                                     )
-                                    if(false) { // TODO
+                                    if(labelSelected.value.id == real.id) {
                                         Icon(
                                             Icons.Filled.Check,
                                             contentDescription = "Localized description",
@@ -156,7 +156,7 @@ fun ModalBottomSheet(
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
-                                    Row() {
+                                    Row {
                                         Icon(
                                             Icons.Filled.Summarize,
                                             contentDescription = "Localized description",
@@ -185,7 +185,7 @@ fun ModalBottomSheet(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Row() {
+                            Row {
                                 Icon(
                                     Icons.Filled.Summarize,
                                     contentDescription = "Localized description",

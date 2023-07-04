@@ -56,9 +56,9 @@ fun AddLabelDialog(
 
     val coroutineScope = rememberCoroutineScope()
 
-    var nombreLabel = remember { mutableStateOf("") }
+    val nombreLabel = remember { mutableStateOf("") }
 
-    var colorSelected = remember { mutableStateOf(Color.Black) }
+    val colorSelected = remember { mutableStateOf(Color.Black) }
 
     if (openLabelDialog.value) {
 

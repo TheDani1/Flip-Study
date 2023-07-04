@@ -17,7 +17,6 @@ import com.example.flipstudy.ui.navigation.Screens
 fun BottomNavigation(navController: NavController){
 
     val items = listOf(
-        Screens.Settings,
         Screens.Timer,
         Screens.Statistics
     )
