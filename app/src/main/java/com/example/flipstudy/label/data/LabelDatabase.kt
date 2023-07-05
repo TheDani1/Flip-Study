@@ -1,4 +1,4 @@
-package com.example.flipstudy.ui.label.data
+package com.example.flipstudy.label.data
 
 import android.content.Context
 import androidx.room.Database

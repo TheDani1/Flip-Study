@@ -1,4 +1,4 @@
-package com.example.flipstudy.ui.screens
+package com.example.flipstudy.screens
 
 import android.content.res.Configuration
 import android.media.Ringtone
@@ -48,14 +48,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.flipstudy.R
-import com.example.flipstudy.ui.components.CountdownActions
-import com.example.flipstudy.ui.components.CountdownSetterDialog
-import com.example.flipstudy.ui.components.SegmentedButton
-import com.example.flipstudy.ui.label.data.ColorEnum
-import com.example.flipstudy.ui.label.data.Label
-import com.example.flipstudy.ui.label.data.LabelDatabase
-import com.example.flipstudy.ui.label.data.colorEnumToColor
-import com.example.flipstudy.ui.label.ui.ModalBottomSheet
+import com.example.flipstudy.components.CountdownActions
+import com.example.flipstudy.components.CountdownSetterDialog
+import com.example.flipstudy.components.SegmentedButton
+import com.example.flipstudy.label.data.ColorEnum
+import com.example.flipstudy.label.data.Label
+import com.example.flipstudy.label.data.LabelDatabase
+import com.example.flipstudy.label.data.colorEnumToColor
+import com.example.flipstudy.label.ui.ModalBottomSheet
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 

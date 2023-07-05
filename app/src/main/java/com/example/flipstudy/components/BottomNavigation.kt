@@ -1,4 +1,4 @@
-package com.example.flipstudy.ui.components
+package com.example.flipstudy.components
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -11,7 +11,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.flipstudy.ui.navigation.Screens
+import com.example.flipstudy.navigation.Screens
 
 @Composable
 fun BottomNavigation(navController: NavController){

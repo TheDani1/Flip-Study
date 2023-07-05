@@ -1,4 +1,4 @@
-package com.example.flipstudy.ui.label.ui
+package com.example.flipstudy.label.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,9 +30,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
-import com.example.flipstudy.ui.label.data.Label
-import com.example.flipstudy.ui.label.data.LabelDatabase
-import com.example.flipstudy.ui.label.data.colorToEnumColor
+import com.example.flipstudy.label.data.Label
+import com.example.flipstudy.label.data.LabelDatabase
+import com.example.flipstudy.label.data.colorToEnumColor
 import kotlinx.coroutines.launch
 
 val availableColours = listOf(

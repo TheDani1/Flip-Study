@@ -1,4 +1,4 @@
-package com.example.flipstudy.ui.components
+package com.example.flipstudy.components
 
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing

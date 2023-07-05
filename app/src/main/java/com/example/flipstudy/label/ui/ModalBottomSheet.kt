@@ -1,4 +1,4 @@
-package com.example.flipstudy.ui.label.ui
+package com.example.flipstudy.label.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,9 +35,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.flipstudy.R
-import com.example.flipstudy.ui.label.data.Label
-import com.example.flipstudy.ui.label.data.LabelDatabase
-import com.example.flipstudy.ui.label.data.colorEnumToColor
+import com.example.flipstudy.label.data.Label
+import com.example.flipstudy.label.data.LabelDatabase
+import com.example.flipstudy.label.data.colorEnumToColor
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,7 +81,7 @@ fun ModalBottomSheet(
                             .align(Alignment.CenterHorizontally)
                             .navigationBarsPadding(),
                     ) {
-                        itemsIndexed(reals) { index, real ->
+                        itemsIndexed(reals) { _, real ->
                             Box(
                                 modifier = Modifier
                                     .height(75.dp)

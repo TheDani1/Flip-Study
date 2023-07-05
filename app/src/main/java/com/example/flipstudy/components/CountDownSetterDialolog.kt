@@ -1,4 +1,4 @@
-package com.example.flipstudy.ui.components
+package com.example.flipstudy.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.aspectRatio
@@ -21,9 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
-import com.example.flipstudy.ui.screens.horas
-import com.example.flipstudy.ui.screens.minutos
-import com.example.flipstudy.ui.screens.segundos
+import com.example.flipstudy.screens.horas
+import com.example.flipstudy.screens.minutos
+import com.example.flipstudy.screens.segundos
 
 @Composable
 fun CountdownSetterDialog(

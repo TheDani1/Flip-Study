@@ -1,4 +1,4 @@
-package com.example.flipstudy.ui.navigation
+package com.example.flipstudy.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons

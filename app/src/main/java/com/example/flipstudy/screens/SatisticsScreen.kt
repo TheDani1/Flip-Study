@@ -1,4 +1,4 @@
-package com.example.flipstudy.ui.screens
+package com.example.flipstudy.screens
 
 import android.content.res.Configuration
 import android.util.Log
@@ -28,11 +28,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.flipstudy.R
-import com.example.flipstudy.ui.components.CuerpoStatistics
-import com.example.flipstudy.ui.components.CuerpoStatisticsLandscape
-import com.example.flipstudy.ui.label.data.Label
-import com.example.flipstudy.ui.label.data.LabelDatabase
-import com.example.flipstudy.ui.label.data.colorEnumToColor
+import com.example.flipstudy.components.CuerpoStatistics
+import com.example.flipstudy.components.CuerpoStatisticsLandscape
+import com.example.flipstudy.label.data.Label
+import com.example.flipstudy.label.data.LabelDatabase
+import com.example.flipstudy.label.data.colorEnumToColor
 import kotlin.time.Duration.Companion.seconds
 
 @Composable

@@ -1,4 +1,4 @@
-package com.example.flipstudy.ui.theme
+package com.example.flipstudy.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

@@ -1,4 +1,4 @@
-package com.example.flipstudy.ui.screens
+package com.example.flipstudy.screens
 
 import android.media.Ringtone
 import android.os.Build
@@ -10,9 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.example.flipstudy.ui.components.BottomNavigation
-import com.example.flipstudy.ui.label.data.LabelDatabase
-import com.example.flipstudy.ui.navigation.AppNavigation
+import com.example.flipstudy.components.BottomNavigation
+import com.example.flipstudy.label.data.LabelDatabase
+import com.example.flipstudy.navigation.AppNavigation
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable

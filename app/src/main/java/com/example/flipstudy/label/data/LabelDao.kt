@@ -1,4 +1,4 @@
-package com.example.flipstudy.ui.label.data
+package com.example.flipstudy.label.data
 
 import androidx.room.Dao
 import androidx.room.Delete

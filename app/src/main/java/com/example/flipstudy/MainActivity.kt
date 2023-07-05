@@ -18,9 +18,9 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalConfiguration
-import com.example.flipstudy.ui.label.data.LabelDatabase
-import com.example.flipstudy.ui.screens.MainScreen
-import com.example.flipstudy.ui.theme.FlipStudyTheme
+import com.example.flipstudy.label.data.LabelDatabase
+import com.example.flipstudy.screens.MainScreen
+import com.example.flipstudy.theme.FlipStudyTheme
 
 
 class MainActivity : ComponentActivity() {

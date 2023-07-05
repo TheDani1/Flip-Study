@@ -1,4 +1,4 @@
-package com.example.flipstudy.ui.navigation
+package com.example.flipstudy.navigation
 
 import android.media.Ringtone
 import android.os.Build
@@ -10,9 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.flipstudy.ui.label.data.LabelDatabase
-import com.example.flipstudy.ui.screens.StatisticsScreen
-import com.example.flipstudy.ui.screens.TimerScreen
+import com.example.flipstudy.label.data.LabelDatabase
+import com.example.flipstudy.screens.StatisticsScreen
+import com.example.flipstudy.screens.TimerScreen
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable

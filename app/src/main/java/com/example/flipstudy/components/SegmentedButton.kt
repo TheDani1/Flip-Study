@@ -1,4 +1,4 @@
-package com.example.flipstudy.ui.components
+package com.example.flipstudy.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Row
