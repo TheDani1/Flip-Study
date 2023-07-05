@@ -5,7 +5,6 @@ import android.os.Build
 import android.os.Vibrator
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -20,7 +19,7 @@ fun AppNavigation(
     navController: NavHostController,
     modifier: Modifier,
     db: LabelDatabase,
-    sensorValues: MutableState<Float>,
+    sensorValues: Float,
     vibratorManager: Vibrator,
     ringtone: Ringtone,
     orientation: Int,

@@ -133,7 +133,7 @@ fun horas(tiempo: MutableState<String>): String {
 @Composable
 fun TimerScreen(
     db: LabelDatabase,
-    sensorValues: MutableState<Float>,
+    sensorValues: Float,
     vibratorManager: Vibrator,
     ringtone: Ringtone,
     orientation: Int,
@@ -181,7 +181,7 @@ fun TimerScreen(
     if (modeFlipStudy.value) {
 
         // COUNTDOWN EN SI
-        LaunchedEffect(key1 = sensorValues.value <= 20f, key2 = segundos.value) {
+        LaunchedEffect(key1 = sensorValues <= 20f, key2 = segundos.value) {
 
             if (segundos.value == 0 && minutos.value >= 1) {
                 minutos.value -= 1
@@ -218,7 +218,7 @@ fun TimerScreen(
 
                 if (checkSound.value) ringtone.play()
 
-                if (sensorValues.value > 20f) {
+                if (sensorValues > 20f) {
                     if (checkSound.value) ringtone.stop()
                     if (checkedVibration.value) vibratorManager.cancel()
 
@@ -238,7 +238,7 @@ fun TimerScreen(
 
             }
 
-            if (sensorValues.value > 20f && worked.value) {
+            if (sensorValues > 20f && worked.value) {
                 db.labelDao().update(
                     Label(
                         labelSelected.value.id,
@@ -250,7 +250,7 @@ fun TimerScreen(
                 worked.value = false
             }
 
-            if (sensorValues.value <= 20f && segundos.value > 0) {
+            if (sensorValues <= 20f && segundos.value > 0) {
                 delay(1.seconds)
                 segundos.value -= 1
                 labelSelected.value.dedicatedSeconds++
