@@ -164,7 +164,7 @@ fun TimerScreen(
     val openModalBottomSheet = rememberSaveable { mutableStateOf(false) }
 
     val labelSelected =
-        rememberSaveable { mutableStateOf(Label(0, "Unlabelled", ColorEnum.GRAY, 0)) }
+        rememberSaveable { mutableStateOf(Label(0, "Unlabelled", ColorEnum.GRAY)) }
 
     val modeFlipStudy = rememberSaveable { mutableStateOf(true) }
     val countdownRunning = rememberSaveable { mutableStateOf(false) }
@@ -227,12 +227,8 @@ fun TimerScreen(
                             labelSelected.value.id,
                             labelSelected.value.name,
                             labelSelected.value.color,
-                            labelSelected.value.dedicatedSeconds
+                            //labelSelected.value.dedicatedSeconds
                         )
-                    )
-                    Log.d(
-                        "SUBIDOBD",
-                        labelSelected.value.id.toString() + labelSelected.value.name + labelSelected.value.color + labelSelected.value.dedicatedSeconds
                     )
                 }
 
@@ -244,7 +240,7 @@ fun TimerScreen(
                         labelSelected.value.id,
                         labelSelected.value.name,
                         labelSelected.value.color,
-                        labelSelected.value.dedicatedSeconds
+                        //labelSelected.value.dedicatedSeconds
                     )
                 )
                 worked.value = false
@@ -253,7 +249,7 @@ fun TimerScreen(
             if (sensorValues <= 20f && segundos.value > 0) {
                 delay(1.seconds)
                 segundos.value -= 1
-                labelSelected.value.dedicatedSeconds++
+                //labelSelected.value.dedicatedSeconds++
                 worked.value = true
             }
 
@@ -313,12 +309,8 @@ fun TimerScreen(
                             labelSelected.value.id,
                             labelSelected.value.name,
                             labelSelected.value.color,
-                            labelSelected.value.dedicatedSeconds
+                            //labelSelected.value.dedicatedSeconds
                         )
-                    )
-                    Log.d(
-                        "TIMERBOOL",
-                        labelSelected.value.id.toString() + labelSelected.value.name + labelSelected.value.color + labelSelected.value.dedicatedSeconds
                     )
                 }
 
@@ -331,7 +323,7 @@ fun TimerScreen(
                         labelSelected.value.id,
                         labelSelected.value.name,
                         labelSelected.value.color,
-                        labelSelected.value.dedicatedSeconds
+                        //labelSelected.value.dedicatedSeconds
                     )
                 )
                 worked.value = false
@@ -343,7 +335,7 @@ fun TimerScreen(
             if (countdownRunning.value && segundos.value > 0) {
                 delay(1.seconds)
                 segundos.value -= 1
-                labelSelected.value.dedicatedSeconds++
+                //labelSelected.value.dedicatedSeconds++
                 worked.value = true
             }
 

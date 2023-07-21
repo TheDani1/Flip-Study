@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.flipstudy.statistics.Statistic
+import com.example.flipstudy.statistics.StatisticDao
 
-@Database(entities = [Label::class], version = 1)
+@Database(entities = [Label::class, Statistic::class], version = 1)
 abstract class LabelDatabase : RoomDatabase() {
 
     companion object {
@@ -22,4 +24,5 @@ abstract class LabelDatabase : RoomDatabase() {
     }
 
     abstract fun labelDao(): LabelDao
+    abstract fun statisticDao(): StatisticDao
 }

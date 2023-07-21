@@ -117,7 +117,7 @@ fun AddLabelDialog(
                 TextButton(
                     onClick = {
 
-                        val labelInsert = Label(0, nombreLabel.value, colorToEnumColor(colorSelected.value), 0)
+                        val labelInsert = Label(0, nombreLabel.value, colorToEnumColor(colorSelected.value))
 
                         coroutineScope.launch {
                             db.labelDao().insert(labelInsert)

@@ -16,7 +16,7 @@ interface LabelDao {
     @Query("SELECT * from labels WHERE id = :id")
     fun getLabel(id: Int): Label
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(Label: Label)
 
     @Update

@@ -132,7 +132,7 @@ fun ModalBottomSheet(
                                                         real.id,
                                                         real.name,
                                                         real.color,
-                                                        real.dedicatedSeconds
+                                                        //real.dedicatedSeconds
                                                     )
                                                 )
                                             }

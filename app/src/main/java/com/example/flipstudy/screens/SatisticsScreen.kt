@@ -16,15 +16,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Label
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.flipstudy.R
@@ -123,11 +127,28 @@ fun StatisticsScreen(db: LabelDatabase, orientation: Int) {
         addAll(db.labelDao().getAllLabels())
     } }
 
-    Log.d("STATISTICS", reals.sumOf { label -> label.dedicatedSeconds }.toString())
+    var state = remember { mutableStateOf(0) }
+    val titles = listOf("Tab 1", "Tab 2", "Tab 3 with lots of text")
+    Column {
+        TabRow(selectedTabIndex = state.value) {
+            titles.forEachIndexed { index, title ->
+                Tab(
+                    selected = state.value == index,
+                    onClick = { state.value = index },
+                    text = { Text(text = title, maxLines = 2, overflow = TextOverflow.Ellipsis) }
+                )
+            }
+        }
+        Text(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            text = "Text tab ${state.value + 1} selected",
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
 
-    val amountsTotal = remember { reals.sumOf { label -> label.dedicatedSeconds } }
+    //val amountsTotal = remember { reals.sumOf { label -> label.dedicatedSeconds } }
 
-    if(orientation == Configuration.ORIENTATION_LANDSCAPE){
+    /*if(orientation == Configuration.ORIENTATION_LANDSCAPE){
 
         if (amountsTotal <= 0) {
 
@@ -233,6 +254,6 @@ fun StatisticsScreen(db: LabelDatabase, orientation: Int) {
             }
         }
 
-    }
+    }*/
 
 }

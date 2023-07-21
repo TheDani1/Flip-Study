@@ -12,5 +12,4 @@ data class Label(
     @PrimaryKey(autoGenerate = true) var id: Int,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "colour") val color: ColorEnum,
-    @ColumnInfo(name = "dedicated_seconds") var dedicatedSeconds: Int
 ): Parcelable

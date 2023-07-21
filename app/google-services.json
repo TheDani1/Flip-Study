@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "446001205802",
+    "project_id": "flipstudy-c0b6c",
+    "storage_bucket": "flipstudy-c0b6c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446001205802:android:20f4d2783c204bfae76953",
+        "android_client_info": {
+          "package_name": "com.example.flipstudy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "446001205802-09a8l8rgb1fc13l9bal6p5tiqbum17tp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBy8Gh8tgRSkn3W2BO8reAYMiUz4k9N0aw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "446001205802-09a8l8rgb1fc13l9bal6p5tiqbum17tp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
