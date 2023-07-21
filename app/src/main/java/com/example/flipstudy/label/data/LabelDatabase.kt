@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.flipstudy.statistics.Statistic
 import com.example.flipstudy.statistics.StatisticDao
 
-@Database(entities = [Label::class, Statistic::class], version = 1)
+@Database(entities = [Label::class, Statistic::class], version = 2)
 abstract class LabelDatabase : RoomDatabase() {
 
     companion object {
@@ -19,6 +19,7 @@ abstract class LabelDatabase : RoomDatabase() {
                 .databaseBuilder(context, LabelDatabase::class.java, DATABASE_NAME)
                 .createFromAsset(DATABASE_DIR)
                 .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
                 .build()
         }
     }

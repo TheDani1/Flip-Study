@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.flipstudy.components.BottomNavigation
 import com.example.flipstudy.label.data.LabelDatabase
 import com.example.flipstudy.navigation.AppNavigation
+import com.example.flipstudy.statistics.GoalsPreferences
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -21,11 +22,12 @@ fun MainScreen(
     vibratorManager: Vibrator,
     ringtone: Ringtone,
     orientation: Int,
+    goalsPreferences: GoalsPreferences,
 ) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomNavigation(navController = navController) }
     ) {innerPadding ->
-        AppNavigation(navController, Modifier.padding(innerPadding), db, sensorValues, vibratorManager, ringtone, orientation)
+        AppNavigation(navController, Modifier.padding(innerPadding), db, sensorValues, vibratorManager, ringtone, orientation, goalsPreferences)
     }
 }

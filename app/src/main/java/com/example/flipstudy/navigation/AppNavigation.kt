@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import com.example.flipstudy.label.data.LabelDatabase
 import com.example.flipstudy.screens.StatisticsScreen
 import com.example.flipstudy.screens.TimerScreen
+import com.example.flipstudy.statistics.GoalsPreferences
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -23,9 +24,10 @@ fun AppNavigation(
     vibratorManager: Vibrator,
     ringtone: Ringtone,
     orientation: Int,
+    goalsPreferences: GoalsPreferences,
 ){
     NavHost(navController = navController, startDestination = Screens.Timer.route, modifier){
         composable(Screens.Timer.route) { TimerScreen(db, sensorValues, vibratorManager, ringtone, orientation) }
-        composable(Screens.Statistics.route) { StatisticsScreen(db, orientation) }
+        composable(Screens.Statistics.route) { StatisticsScreen(db, orientation, goalsPreferences) }
     }
 }

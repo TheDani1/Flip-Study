@@ -18,9 +18,11 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.MutableLiveData
 import com.example.flipstudy.label.data.LabelDatabase
 import com.example.flipstudy.screens.MainScreen
+import com.example.flipstudy.statistics.GoalsPreferences
 import com.example.flipstudy.theme.FlipStudyTheme
 
 class MainActivity : ComponentActivity(), SensorEventListener {
@@ -35,6 +37,8 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         super.onCreate(savedInstanceState)
         setContent {
             FlipStudyTheme{
+
+                val goalsPreferences = GoalsPreferences(LocalContext.current)
 
                 mySensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
                 val sensor = mySensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
@@ -57,7 +61,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                     getSystemService(VIBRATOR_SERVICE) as Vibrator
                 }
 
-
                 val sensorValues by values.observeAsState(initial = 0f)
 
                 val db = LabelDatabase.getInstance(applicationContext)
@@ -65,7 +68,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
                 val orientation = LocalConfiguration.current.orientation
 
-                MainScreen(db, sensorValues, vibrator, ringtone, orientation)
+                MainScreen(db, sensorValues, vibrator, ringtone, orientation, goalsPreferences)
             }
         }
     }
