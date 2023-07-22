@@ -13,6 +13,7 @@ import com.example.flipstudy.label.data.LabelDatabase
 import com.example.flipstudy.screens.StatisticsScreen
 import com.example.flipstudy.screens.TimerScreen
 import com.example.flipstudy.statistics.GoalsPreferences
+import com.example.flipstudy.statistics.StatisticViewModel
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -25,9 +26,11 @@ fun AppNavigation(
     ringtone: Ringtone,
     orientation: Int,
     goalsPreferences: GoalsPreferences,
+    statisticViewModel: StatisticViewModel,
+    rotationValues: Float
 ){
     NavHost(navController = navController, startDestination = Screens.Timer.route, modifier){
-        composable(Screens.Timer.route) { TimerScreen(db, sensorValues, vibratorManager, ringtone, orientation) }
-        composable(Screens.Statistics.route) { StatisticsScreen(db, orientation, goalsPreferences) }
+        composable(Screens.Timer.route) { TimerScreen(db, sensorValues, vibratorManager, ringtone, orientation, rotationValues) }
+        composable(Screens.Statistics.route) { StatisticsScreen(orientation, goalsPreferences, statisticViewModel) }
     }
 }

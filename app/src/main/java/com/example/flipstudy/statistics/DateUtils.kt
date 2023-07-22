@@ -1,5 +1,8 @@
 package com.example.flipstudy.statistics
 
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class DateUtils {
@@ -14,6 +17,28 @@ class DateUtils {
 
             return String.format("%02d:%02d:%02d", hours, minutes, seconds);
         }
+
+        fun mismaSemana(timestamp1: Long, timestamp2: Long): Boolean {
+            val calendar1 = Calendar.getInstance(Locale.getDefault());
+            calendar1.firstDayOfWeek = Calendar.MONDAY
+
+            calendar1.timeInMillis = timestamp1
+            val semana1 = calendar1.get(Calendar.WEEK_OF_YEAR)
+
+            calendar1.timeInMillis = timestamp2
+            val semana2 = calendar1.get(Calendar.WEEK_OF_YEAR)
+
+            return semana1 == semana2
+        }
+
+        fun obtenerDiaDeLaSemana(timestamp: Long): Int {
+            val calendar = Calendar.getInstance(Locale.getDefault());
+            calendar.firstDayOfWeek = Calendar.MONDAY
+            calendar.timeInMillis = timestamp
+
+            return calendar.get(Calendar.DAY_OF_WEEK)
+        }
+
 
     }
 

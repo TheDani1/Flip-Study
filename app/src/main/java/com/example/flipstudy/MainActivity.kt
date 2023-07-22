@@ -23,11 +23,14 @@ import androidx.lifecycle.MutableLiveData
 import com.example.flipstudy.label.data.LabelDatabase
 import com.example.flipstudy.screens.MainScreen
 import com.example.flipstudy.statistics.GoalsPreferences
+import com.example.flipstudy.statistics.StatisticViewModel
 import com.example.flipstudy.theme.FlipStudyTheme
 
 class MainActivity : ComponentActivity(), SensorEventListener {
 
     private val values = MutableLiveData<Float>()
+
+    private val rotatationValues = MutableLiveData<Float>()
 
     private lateinit var mySensorManager: SensorManager
 
@@ -62,13 +65,14 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                 }
 
                 val sensorValues by values.observeAsState(initial = 0f)
+                val rotationSensorValues by rotatationValues.observeAsState(initial = 0f)
 
                 val db = LabelDatabase.getInstance(applicationContext)
                 Log.d("QUEASCO", "Main")
 
                 val orientation = LocalConfiguration.current.orientation
 
-                MainScreen(db, sensorValues, vibrator, ringtone, orientation, goalsPreferences)
+                MainScreen(db, sensorValues, vibrator, ringtone, orientation, goalsPreferences, StatisticViewModel(db), rotationSensorValues)
             }
         }
     }
@@ -78,8 +82,17 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
         mySensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         val sensor = mySensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
+        val accelerometro = mySensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         if (sensor != null) {
             mySensorManager.registerListener(this, sensor,
+                SensorManager.SENSOR_DELAY_NORMAL)
+            Log.i("LIGHTSENSOR", "Registerered for TYPE_LIGHT Sensor")
+        } else {
+            Log.e("LIGHTSENSOR", "Registerered for TYPE_LIGHT Sensor")
+        }
+
+        if (accelerometro != null) {
+            mySensorManager.registerListener(this, accelerometro,
                 SensorManager.SENSOR_DELAY_NORMAL)
             Log.i("LIGHTSENSOR", "Registerered for TYPE_LIGHT Sensor")
         } else {
@@ -99,6 +112,11 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         if (event.sensor.type == Sensor.TYPE_LIGHT) {
             values.postValue(event.values[0])
             Log.d("LIGHTSENSOR", event.values[0].toString())
+        }
+
+        if(event.sensor.type == Sensor.TYPE_ACCELEROMETER){
+            rotatationValues.postValue(event.values[2])
+            Log.d("ACELEROMETRO", event.values[2].toString())
         }
     }
 

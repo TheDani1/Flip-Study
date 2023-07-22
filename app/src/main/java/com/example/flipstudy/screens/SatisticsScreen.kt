@@ -1,9 +1,15 @@
 package com.example.flipstudy.screens
 
+import android.graphics.Insets
+import android.graphics.Typeface
 import android.graphics.fonts.FontFamily
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +42,9 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,7 +52,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -59,22 +70,160 @@ import com.example.flipstudy.label.data.LabelDatabase
 import com.example.flipstudy.statistics.DateUtils
 import com.example.flipstudy.statistics.GoalsPreferences
 import com.example.flipstudy.statistics.Statistic
+import com.example.flipstudy.statistics.StatisticViewModel
 import com.example.flipstudy.statistics.components.GoalRow
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
+import com.patrykandpatrick.vico.compose.axis.vertical.endAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.column.columnChart
 import com.patrykandpatrick.vico.compose.component.lineComponent
+import com.patrykandpatrick.vico.compose.component.overlayingComponent
+import com.patrykandpatrick.vico.compose.component.shape.shader.fromBrush
+import com.patrykandpatrick.vico.compose.component.shapeComponent
+import com.patrykandpatrick.vico.compose.component.textComponent
+import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
+import com.patrykandpatrick.vico.compose.legend.legendItem
+import com.patrykandpatrick.vico.compose.legend.verticalLegend
+import com.patrykandpatrick.vico.compose.style.ChartStyle
+import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
+import com.patrykandpatrick.vico.compose.style.currentChartStyle
+import com.patrykandpatrick.vico.core.DefaultAlpha
+import com.patrykandpatrick.vico.core.DefaultColors
+import com.patrykandpatrick.vico.core.DefaultDimens
+import com.patrykandpatrick.vico.core.DefaultDimens.AXIS_LABEL_ROTATION_DEGREES
+import com.patrykandpatrick.vico.core.axis.AxisPosition
+import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.chart.column.ColumnChart
+import com.patrykandpatrick.vico.core.chart.composed.plus
+import com.patrykandpatrick.vico.core.chart.decoration.ThresholdLine
+import com.patrykandpatrick.vico.core.chart.dimensions.HorizontalDimensions
+import com.patrykandpatrick.vico.core.chart.line.LineChart
+import com.patrykandpatrick.vico.core.component.marker.MarkerComponent
+import com.patrykandpatrick.vico.core.component.shape.DashedShape
 import com.patrykandpatrick.vico.core.component.shape.LineComponent
+import com.patrykandpatrick.vico.core.component.shape.ShapeComponent
+import com.patrykandpatrick.vico.core.component.shape.Shapes
+import com.patrykandpatrick.vico.core.component.shape.cornered.Corner
+import com.patrykandpatrick.vico.core.component.shape.cornered.MarkerCorneredShape
+import com.patrykandpatrick.vico.core.component.shape.shader.DynamicShaders
+import com.patrykandpatrick.vico.core.context.MeasureContext
+import com.patrykandpatrick.vico.core.entry.ChartEntryModel
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.FloatEntry
+import com.patrykandpatrick.vico.core.entry.composed.plus
 import com.patrykandpatrick.vico.core.entry.entriesOf
 import com.patrykandpatrick.vico.core.entry.entryModelOf
+import com.patrykandpatrick.vico.core.extension.copyColor
+import com.patrykandpatrick.vico.core.marker.DefaultMarkerLabelFormatter
+import com.patrykandpatrick.vico.core.marker.Marker
 import com.patrykandpatrick.vico.views.chart.line.lineChart
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Locale
 import kotlin.random.Random
+
+@Composable
+internal fun rememberChartStyle(columnChartColors: List<Color>, lineChartColors: List<Color>): ChartStyle {
+    val isSystemInDarkTheme = isSystemInDarkTheme()
+    return remember(columnChartColors, lineChartColors, isSystemInDarkTheme) {
+        val defaultColors = if (isSystemInDarkTheme) DefaultColors.Dark else DefaultColors.Light
+        ChartStyle(
+            ChartStyle.Axis(
+                axisLabelColor = Color(defaultColors.axisLabelColor),
+                axisGuidelineColor = Color(defaultColors.axisGuidelineColor),
+                axisLineColor = Color(defaultColors.axisLineColor),
+            ),
+            ChartStyle.ColumnChart(
+                columnChartColors.map { columnChartColor ->
+                    LineComponent(
+                        columnChartColor.toArgb(),
+                        DefaultDimens.COLUMN_WIDTH,
+                        Shapes.roundedCornerShape(DefaultDimens.COLUMN_ROUNDNESS_PERCENT),
+                    )
+                },
+            ),
+            ChartStyle.LineChart(
+                lineChartColors.map { lineChartColor ->
+                    LineChart.LineSpec(
+                        lineColor = lineChartColor.toArgb(),
+                        lineBackgroundShader = DynamicShaders.fromBrush(
+                            Brush.verticalGradient(
+                                listOf(
+                                    lineChartColor.copy(DefaultAlpha.LINE_BACKGROUND_SHADER_START),
+                                    lineChartColor.copy(DefaultAlpha.LINE_BACKGROUND_SHADER_END),
+                                ),
+                            ),
+                        ),
+                    )
+                },
+            ),
+            ChartStyle.Marker(),
+            Color(defaultColors.elevationOverlayColor),
+        )
+    }
+}
+
+@Composable
+internal fun rememberMarker(): Marker {
+    val labelBackgroundColor = MaterialTheme.colorScheme.surface
+    val labelBackground = remember(labelBackgroundColor) {
+        ShapeComponent(MarkerCorneredShape(Corner.FullyRounded), labelBackgroundColor.toArgb()).setShadow(
+            radius = 4f,
+            dy = 2f,
+            applyElevationOverlay = true,
+        )
+    }
+    val label = textComponent(
+        background = labelBackground,
+        lineCount = 1,
+        padding = dimensionsOf(8.dp, 4.dp),
+    )
+    val indicatorInnerComponent = shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.surface)
+    val indicatorCenterComponent = shapeComponent(Shapes.pillShape, Color.White)
+    val indicatorOuterComponent = shapeComponent(Shapes.pillShape, Color.White)
+    val indicator = overlayingComponent(
+        outer = indicatorOuterComponent,
+        inner = overlayingComponent(
+            outer = indicatorCenterComponent,
+            inner = indicatorInnerComponent,
+            innerPaddingAll = 5.dp,
+        ),
+        innerPaddingAll = 10.dp,
+    )
+    val guideline = lineComponent(
+        MaterialTheme.colorScheme.onSurface.copy(.2f),
+        2.dp,
+        DashedShape(Shapes.pillShape, 8f, 4f),
+    )
+    return remember(label, indicator, guideline) {
+        object : MarkerComponent(label, indicator, guideline) {
+            init {
+                indicatorSizeDp = 36f
+                onApplyEntryColor = { entryColor ->
+                    indicatorOuterComponent.color = entryColor.copyColor(32)
+                    with(indicatorCenterComponent) {
+                        color = entryColor
+                        setShadow(radius = 12f, color = entryColor)
+                    }
+                }
+            }
+
+            @RequiresApi(Build.VERSION_CODES.Q)
+            override fun getInsets(
+                context: MeasureContext,
+                outInsets: com.patrykandpatrick.vico.core.chart.insets.Insets,
+                horizontalDimensions: HorizontalDimensions
+            ) = with(context) {
+                outInsets.top = label.getHeight(context) + MarkerCorneredShape(Corner.FullyRounded).tickSizeDp.pixels +
+                        4f.pixels * 1.3f -
+                        2f.pixels
+            }
+        }
+    }
+}
 
 @Composable
 fun BlankScreenLandscape() {
@@ -161,17 +310,13 @@ fun BlankScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StatisticsScreen(db: LabelDatabase, orientation: Int, goalsPreferences: GoalsPreferences) {
-
-    val reals = remember {
-        mutableStateListOf<Statistic>().apply {
-            addAll(db.statisticDao().getAllStatistics())
-        }
-    }
+fun StatisticsScreen(orientation: Int, goalsPreferences: GoalsPreferences, statisticViewModel: StatisticViewModel) {
 
     val context = LocalContext.current
 
     val format = SimpleDateFormat("dd MMM yyyy",  Locale.getDefault())
+    val calendar = Calendar.getInstance(Locale.getDefault());
+    calendar.firstDayOfWeek = Calendar.MONDAY
 
     val dailyGoal = rememberSaveable { mutableStateOf(goalsPreferences.get("dailyGoal", 1800)) }
     val weekGoal = rememberSaveable { mutableStateOf(goalsPreferences.get("weekGoal", 1800)) }
@@ -184,6 +329,55 @@ fun StatisticsScreen(db: LabelDatabase, orientation: Int, goalsPreferences: Goal
 
     val state = remember { mutableStateOf(0) }
     val titles = listOf("Goals", "History", "Por etiqueta")
+
+    val horizontalAxisValueFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, _ ->
+        when(value){
+            0F -> "Lunes"
+            1F -> "Martes"
+            2F -> "Miercoles"
+            3F -> "Jueves"
+            4F -> "Viernes"
+            5F -> "Sabado"
+            6F -> "Domingo"
+            else -> "Otro dia"
+        }
+    }
+
+    val verticalAxisValueFormatter = AxisValueFormatter<AxisPosition.Vertical.Start> { value, _ ->
+        DateUtils.fromSecondsToTime(value.toInt())
+    }
+
+    val columns = listOf(
+        Color.Red,
+        Color.Blue,
+        Color.Green,
+        Color.Yellow,
+        Color.Magenta,
+        Color.Green
+    )
+    
+    val model : ChartEntryModel by statisticViewModel.model.observeAsState(initial = entryModelOf(2))
+    val colors by statisticViewModel.colors.observeAsState(initial = emptyList())
+    val colorsLabelled by statisticViewModel.colorsLabelled.observeAsState(initial = emptyList())
+
+    @Composable
+    fun rememberLegend() = verticalLegend(
+        items = statisticViewModel.columns.mapIndexed { index, chartColor ->
+            legendItem(
+                icon = shapeComponent(Shapes.pillShape, chartColor),
+                label = textComponent(
+                    color = currentChartStyle.axis.axisLabelColor,
+                    textSize = 12.sp,
+                ),
+                labelText = statisticViewModel.stringColumns[index],
+            )
+        },
+        iconSize = 8.dp,
+        iconPadding = 10.dp,
+        spacing = 4.dp,
+        padding = dimensionsOf(top = 8.dp),
+    )
+
     Column {
         TabRow(selectedTabIndex = state.value) {
             titles.forEachIndexed { index, title ->
@@ -227,42 +421,35 @@ fun StatisticsScreen(db: LabelDatabase, orientation: Int, goalsPreferences: Goal
 
         }else if(state.value == 1){
 
-            val model = entryModelOf(
-                entriesOf(2f, -1f, -4f, 2f, 1f, -5f, -2f, -3f),
-                entriesOf(3f, -2f, 2f, -1f, 2f, -3f, -4f, -1f),
-                entriesOf(1f, -2f, 2f, 1f, -1f, 4f, 4f, -2f),
+            val line = shapeComponent(DashedShape(Shapes.rectShape, 8f, 4f),strokeWidth = 2.dp, strokeColor = Color.Black)
+            val label = textComponent(
+                color = Color.White,
+                background = shapeComponent(Shapes.pillShape, Color.Black),
+                padding =  dimensionsOf(8.dp, 2.dp),
+                margins = dimensionsOf(4.dp),
+                typeface = Typeface.MONOSPACE,
             )
 
-            val columns: List<LineComponent> = listOf(
-                lineComponent(color = Color(0xFF494949), thickness = 8.dp),
-                lineComponent(color = Color(0xFF7C7A7A), thickness = 8.dp),
-                lineComponent(color = Color(0xFFFF5D73), thickness = 8.dp),
-            )
+            Surface(modifier = Modifier.fillMaxSize().padding(16.dp)) {
 
-            Surface {
-                Chart(
-                    modifier = Modifier.height(250.dp),
-                    chart = columnChart(
-                        columns = columns,
+                val thresholdLine = ThresholdLine(thresholdValue = dailyGoal.value.toFloat(), lineComponent = line, labelComponent = label, thresholdLabel = DateUtils.fromSecondsToTime(dailyGoal.value))
+
+                ProvideChartStyle(rememberChartStyle(statisticViewModel.columns, statisticViewModel.columns)) {
+                    val marker = rememberMarker()
+                    val columnChart = columnChart(
                         mergeMode = ColumnChart.MergeMode.Stack,
-                    ),
-                    model = model,
-                    startAxis = startAxis(maxLabelCount = 8),
-                    bottomAxis = bottomAxis(),
-                )
-            }
-
-        }
-
-        reals.forEach {
-            statistic ->
-            Column {
-                Text(text = statistic.id.toString())
-                Text(text = format.format(statistic.timestamp))
-                Text(text = format.format(System.currentTimeMillis()))
-                Text(text = System.currentTimeMillis().toString())
-                Text(text = statistic.labelId.toString())
-                Text(text = statistic.dedicatedSeconds.toString())
+                        targetVerticalAxisPosition = AxisPosition.Vertical.Start,
+                        decorations = remember(thresholdLine) { listOf(thresholdLine) }
+                    )
+                    Chart(
+                        chart = columnChart ,
+                        startAxis = startAxis(guideline = null, maxLabelCount = 4, valueFormatter = verticalAxisValueFormatter),
+                        bottomAxis = bottomAxis(labelRotationDegrees = 90F, valueFormatter = horizontalAxisValueFormatter),
+                        model = model,
+                        marker = marker,
+                        legend = rememberLegend()
+                    )
+                }
             }
 
         }

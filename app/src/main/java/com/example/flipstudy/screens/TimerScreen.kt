@@ -137,6 +137,7 @@ fun TimerScreen(
     vibratorManager: Vibrator,
     ringtone: Ringtone,
     orientation: Int,
+    rotationValues: Float,
 ) {
 
     val checkedVibration = rememberSaveable { mutableStateOf(true) }
@@ -181,7 +182,7 @@ fun TimerScreen(
     if (modeFlipStudy.value) {
 
         // COUNTDOWN EN SI
-        LaunchedEffect(key1 = sensorValues <= 20f, key2 = segundos.value) {
+        LaunchedEffect(key1 = sensorValues <= 20f && rotationValues <= -9.81f, key2 = segundos.value) {
 
             if (segundos.value == 0 && minutos.value >= 1) {
                 minutos.value -= 1
