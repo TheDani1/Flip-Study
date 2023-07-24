@@ -56,6 +56,7 @@ import com.example.flipstudy.label.data.Label
 import com.example.flipstudy.label.data.LabelDatabase
 import com.example.flipstudy.label.data.colorEnumToColor
 import com.example.flipstudy.label.ui.ModalBottomSheet
+import com.example.flipstudy.statistics.Statistic
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 
@@ -165,7 +166,9 @@ fun TimerScreen(
     val openModalBottomSheet = rememberSaveable { mutableStateOf(false) }
 
     val labelSelected =
-        rememberSaveable { mutableStateOf(Label(0, "Unlabelled", ColorEnum.GRAY)) }
+        rememberSaveable { mutableStateOf(db.labelDao().getAllLabels().random()) }
+
+    val dedicatedSecondsAccumulated = rememberSaveable { mutableStateOf(0) }
 
     val modeFlipStudy = rememberSaveable { mutableStateOf(true) }
     val countdownRunning = rememberSaveable { mutableStateOf(false) }
@@ -223,12 +226,11 @@ fun TimerScreen(
                     if (checkSound.value) ringtone.stop()
                     if (checkedVibration.value) vibratorManager.cancel()
 
-                    db.labelDao().update(
-                        Label(
-                            labelSelected.value.id,
-                            labelSelected.value.name,
-                            labelSelected.value.color,
-                            //labelSelected.value.dedicatedSeconds
+                    db.statisticDao().insert(
+                        Statistic(
+                            labelId = labelSelected.value.id,
+                            dedicatedSeconds = dedicatedSecondsAccumulated.value,
+                            timestamp = System.currentTimeMillis()
                         )
                     )
                 }
@@ -236,12 +238,11 @@ fun TimerScreen(
             }
 
             if (sensorValues > 20f && worked.value) {
-                db.labelDao().update(
-                    Label(
-                        labelSelected.value.id,
-                        labelSelected.value.name,
-                        labelSelected.value.color,
-                        //labelSelected.value.dedicatedSeconds
+                db.statisticDao().insert(
+                    Statistic(
+                        labelId = labelSelected.value.id,
+                        dedicatedSeconds = dedicatedSecondsAccumulated.value,
+                        timestamp = System.currentTimeMillis()
                     )
                 )
                 worked.value = false
@@ -250,7 +251,7 @@ fun TimerScreen(
             if (sensorValues <= 20f && segundos.value > 0) {
                 delay(1.seconds)
                 segundos.value -= 1
-                //labelSelected.value.dedicatedSeconds++
+                dedicatedSecondsAccumulated.value++
                 worked.value = true
             }
 
@@ -305,26 +306,25 @@ fun TimerScreen(
                     if (checkSound.value) ringtone.stop()
                     if (checkedVibration.value) vibratorManager.cancel()
 
-                    db.labelDao().update(
-                        Label(
-                            labelSelected.value.id,
-                            labelSelected.value.name,
-                            labelSelected.value.color,
-                            //labelSelected.value.dedicatedSeconds
+                    db.statisticDao().insert(
+                        Statistic(
+                            labelId = labelSelected.value.id,
+                            dedicatedSeconds = dedicatedSecondsAccumulated.value,
+                            timestamp = System.currentTimeMillis()
                         )
                     )
+
                 }
 
             }
 
             if (!countdownRunning.value && worked.value) {
 
-                db.labelDao().update(
-                    Label(
-                        labelSelected.value.id,
-                        labelSelected.value.name,
-                        labelSelected.value.color,
-                        //labelSelected.value.dedicatedSeconds
+                db.statisticDao().insert(
+                    Statistic(
+                        labelId = labelSelected.value.id,
+                        dedicatedSeconds = dedicatedSecondsAccumulated.value,
+                        timestamp = System.currentTimeMillis()
                     )
                 )
                 worked.value = false
@@ -337,6 +337,7 @@ fun TimerScreen(
                 delay(1.seconds)
                 segundos.value -= 1
                 //labelSelected.value.dedicatedSeconds++
+                dedicatedSecondsAccumulated.value++
                 worked.value = true
             }
 
@@ -580,7 +581,8 @@ fun LandscapeView(
                 .background(
                     color = MaterialTheme.colorScheme.surface,
                     shape = RoundedCornerShape(size = 12.dp)
-                ).fillMaxHeight(),
+                )
+                .fillMaxHeight(),
             shape = AbsoluteRoundedCornerShape(20.dp)
         ){
             Row(

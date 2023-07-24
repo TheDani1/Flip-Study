@@ -6,6 +6,7 @@ import android.graphics.fonts.FontFamily
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -315,7 +316,7 @@ fun StatisticsScreen(orientation: Int, goalsPreferences: GoalsPreferences, stati
     val context = LocalContext.current
 
     val format = SimpleDateFormat("dd MMM yyyy",  Locale.getDefault())
-    val calendar = Calendar.getInstance(Locale.getDefault());
+    val calendar = Calendar.getInstance(Locale("es","ES"))
     calendar.firstDayOfWeek = Calendar.MONDAY
 
     val dailyGoal = rememberSaveable { mutableStateOf(goalsPreferences.get("dailyGoal", 1800)) }
@@ -328,7 +329,7 @@ fun StatisticsScreen(orientation: Int, goalsPreferences: GoalsPreferences, stati
     val goalsTitles = listOf("Daily Goal", "Weekly Goal", "Monthly Goal", "Yearly Goal")
 
     val state = remember { mutableStateOf(0) }
-    val titles = listOf("Goals", "History", "Por etiqueta")
+    val titles = listOf("Goals", "History")
 
     val horizontalAxisValueFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, _ ->
         when(value){
@@ -421,35 +422,50 @@ fun StatisticsScreen(orientation: Int, goalsPreferences: GoalsPreferences, stati
 
         }else if(state.value == 1){
 
-            val line = shapeComponent(DashedShape(Shapes.rectShape, 8f, 4f),strokeWidth = 2.dp, strokeColor = Color.Black)
-            val label = textComponent(
-                color = Color.White,
-                background = shapeComponent(Shapes.pillShape, Color.Black),
-                padding =  dimensionsOf(8.dp, 2.dp),
-                margins = dimensionsOf(4.dp),
-                typeface = Typeface.MONOSPACE,
-            )
+            if(statisticViewModel.goalsSameWeek.isNotEmpty()){
 
-            Surface(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                val line = shapeComponent(DashedShape(Shapes.rectShape, 8f, 4f),strokeWidth = 2.dp, strokeColor = Color.Black)
+                val label = textComponent(
+                    color = Color.White,
+                    background = shapeComponent(Shapes.pillShape, Color.Black),
+                    padding =  dimensionsOf(8.dp, 2.dp),
+                    margins = dimensionsOf(4.dp),
+                    typeface = Typeface.MONOSPACE,
+                )
 
-                val thresholdLine = ThresholdLine(thresholdValue = dailyGoal.value.toFloat(), lineComponent = line, labelComponent = label, thresholdLabel = DateUtils.fromSecondsToTime(dailyGoal.value))
+                Surface(modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)) {
 
-                ProvideChartStyle(rememberChartStyle(statisticViewModel.columns, statisticViewModel.columns)) {
-                    val marker = rememberMarker()
-                    val columnChart = columnChart(
-                        mergeMode = ColumnChart.MergeMode.Stack,
-                        targetVerticalAxisPosition = AxisPosition.Vertical.Start,
-                        decorations = remember(thresholdLine) { listOf(thresholdLine) }
-                    )
-                    Chart(
-                        chart = columnChart ,
-                        startAxis = startAxis(guideline = null, maxLabelCount = 4, valueFormatter = verticalAxisValueFormatter),
-                        bottomAxis = bottomAxis(labelRotationDegrees = 90F, valueFormatter = horizontalAxisValueFormatter),
-                        model = model,
-                        marker = marker,
-                        legend = rememberLegend()
-                    )
+                    val thresholdLine = ThresholdLine(thresholdValue = dailyGoal.value.toFloat(), lineComponent = line, labelComponent = label, thresholdLabel = DateUtils.fromSecondsToTime(dailyGoal.value))
+
+                    ProvideChartStyle(rememberChartStyle(statisticViewModel.columns, statisticViewModel.columns)) {
+                        val marker = rememberMarker()
+                        val columnChart = columnChart(
+                            mergeMode = ColumnChart.MergeMode.Stack,
+                            targetVerticalAxisPosition = AxisPosition.Vertical.Start,
+                            decorations = remember(thresholdLine) { listOf(thresholdLine) }
+                        )
+                        Chart(
+                            chart = columnChart ,
+                            startAxis = startAxis(guideline = null, maxLabelCount = 4, valueFormatter = verticalAxisValueFormatter),
+                            bottomAxis = bottomAxis(labelRotationDegrees = 90F, valueFormatter = horizontalAxisValueFormatter),
+                            model = model,
+                            marker = marker,
+                            legend = rememberLegend()
+                        )
+                    }
                 }
+
+            }else{
+
+                Column(modifier = Modifier.fillMaxSize().padding(50.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically)) {
+                    Image(painter = painterResource(id = R.drawable.undraw_no_data_re_kwbl), "No data")
+
+                    Text(text = "No data", style = MaterialTheme.typography.displayLarge)
+                }
+
+
             }
 
         }

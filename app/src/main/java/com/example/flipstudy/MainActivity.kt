@@ -116,7 +116,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
         if(event.sensor.type == Sensor.TYPE_ACCELEROMETER){
             rotatationValues.postValue(event.values[2])
-            Log.d("ACELEROMETRO", event.values[2].toString())
         }
     }
 

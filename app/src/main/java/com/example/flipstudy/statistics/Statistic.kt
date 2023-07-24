@@ -18,7 +18,7 @@ import kotlinx.parcelize.Parcelize
         onDelete = CASCADE
     )])
 data class Statistic (
-    @PrimaryKey(autoGenerate = true) var id: Int,
+    @PrimaryKey(autoGenerate = true) var id: Int? = null,
     @ColumnInfo(name = "label_id") var labelId: Int,
     @ColumnInfo(name = "seconds_dedicated") var dedicatedSeconds: Int,
     @ColumnInfo(name = "timestamp") var timestamp: Long,

@@ -32,7 +32,7 @@ import com.example.flipstudy.statistics.DateUtils
 fun GoalRow(text : String, goal : MutableState<Int>){
     Text(text = text, style = MaterialTheme.typography.displaySmall)
     Row(
-        modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+        modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(17.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically,
     ) {

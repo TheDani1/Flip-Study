@@ -28,6 +28,8 @@ class StatisticViewModel(db: LabelDatabase) : ViewModel() {
     private var _colorsLabelled = MutableLiveData<MutableList<String>>()
     val colorsLabelled : LiveData<MutableList<String>> = _colorsLabelled
 
+    val goalsSameWeek = mutableListOf<Statistic>()
+
     var columns = mutableListOf<Color>()
     val stringColumns = mutableListOf<String>()
 
@@ -43,7 +45,8 @@ class StatisticViewModel(db: LabelDatabase) : ViewModel() {
 
     init {
 
-        val goalsSameWeek = mutableListOf<Statistic>()
+        Log.d("STATISTICS", "Entramos en INIT")
+
         val entries = mutableMapOf<Int, MutableList<Float>>()
 
         val reals =
@@ -51,16 +54,32 @@ class StatisticViewModel(db: LabelDatabase) : ViewModel() {
                 addAll(db.statisticDao().getAllStatistics())
             }
 
+        reals.forEach{
+            Log.d("STATISTICS", "DEBUG REALS -> " + it.id.toString())
+        }
+
         val labels = mutableStateListOf<Label>().apply {
             addAll(db.labelDao().getAllLabels())
         }
 
+        labels.forEach{
+            Log.d("STATISTICS", "DEBUG LABELS -> " + it.name)
+        }
+
         reals.forEach {
                 statistic ->
+            Log.d("STATISTICS", "${statistic.id.toString()} COMPROBANDO")
             if(DateUtils.mismaSemana(System.currentTimeMillis(), statistic.timestamp)){
                 goalsSameWeek.add(statistic)
+                Log.d("STATISTICS", "${statistic.id.toString()} misma semana")
             }
 
+        }
+
+        Log.d("STATISTICS", "GOALS SAME WEEK SIZE-> " + goalsSameWeek.size)
+
+        goalsSameWeek.forEach {
+            Log.d("STATISTICS", "DEBUG GOALS SAME WEEK -> " + it.labelId)
         }
 
         val statisticsByLabelId = goalsSameWeek.groupBy { it.labelId }

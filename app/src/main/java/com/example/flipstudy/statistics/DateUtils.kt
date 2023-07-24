@@ -1,5 +1,6 @@
 package com.example.flipstudy.statistics
 
+import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -19,7 +20,7 @@ class DateUtils {
         }
 
         fun mismaSemana(timestamp1: Long, timestamp2: Long): Boolean {
-            val calendar1 = Calendar.getInstance(Locale.getDefault());
+            val calendar1 = Calendar.getInstance(Locale("es","ES"));
             calendar1.firstDayOfWeek = Calendar.MONDAY
 
             calendar1.timeInMillis = timestamp1
@@ -28,11 +29,12 @@ class DateUtils {
             calendar1.timeInMillis = timestamp2
             val semana2 = calendar1.get(Calendar.WEEK_OF_YEAR)
 
+            Log.d("STATISTICS", "¿ $semana1 == $semana2 ?")
             return semana1 == semana2
         }
 
         fun obtenerDiaDeLaSemana(timestamp: Long): Int {
-            val calendar = Calendar.getInstance(Locale.getDefault());
+            val calendar = Calendar.getInstance(Locale("es","ES"));
             calendar.firstDayOfWeek = Calendar.MONDAY
             calendar.timeInMillis = timestamp
 
