@@ -28,6 +28,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.flipstudy.statistics.DateUtils
 
+/**
+ * Función encargada de renderizar las filas de los diferentes objetivos.
+ *
+ */
 @Composable
 fun GoalRow(text : String, goal : MutableState<Int>){
     Text(text = text, style = MaterialTheme.typography.displaySmall)

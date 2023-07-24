@@ -47,6 +47,10 @@ val availableColours = listOf(
     Color.Black
 )
 
+/**
+ * Función [Composable] que renderiza un dialogo para poder añadir una nueva etiqueta.
+ *
+ */
 @Composable
 fun AddLabelDialog(
     openLabelDialog: MutableState<Boolean>,

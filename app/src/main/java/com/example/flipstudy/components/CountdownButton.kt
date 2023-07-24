@@ -13,6 +13,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 
+/**
+ * Función encargada de renderizar el botón para establecer el CountDown
+ *
+ * @param action Acción del botón
+ * @param modifier Modificador de la función composable
+ * @param onClick Función ejecutada cuando se hace click
+ *
+ */
 @Composable
 fun CountdownButton(action: TimerAction,
                     modifier: Modifier = Modifier,

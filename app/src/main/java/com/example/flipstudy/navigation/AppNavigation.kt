@@ -15,6 +15,21 @@ import com.example.flipstudy.screens.TimerScreen
 import com.example.flipstudy.statistics.GoalsPreferences
 import com.example.flipstudy.statistics.StatisticViewModel
 
+/**
+ * Función [Composable] que se encarga del control de navegación de la app
+ *
+ * @param navController Controlador de navegación
+ * @param modifier Modificador(es) de la función de composición
+ * @param db Acceso a la base de datos
+ * @param sensorValues Valores del sensor
+ * @param vibratorManager Manejador de vibración
+ * @param ringtone Manejador de sonido
+ * @param orientation Manejador de orientación
+ * @param goalsPreferences Preferencias de objetivos
+ * @param statisticViewModel viewModel de la pantalla de estadísticas
+ * @param rotationValues Valores del sensor de rotación
+ *
+ */
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun AppNavigation(

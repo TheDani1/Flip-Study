@@ -5,6 +5,11 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 
+/**
+ * Variable que contiene cada una de las acciones de los botones del CountDown
+ *
+ *
+ */
 val CountdownActions = listOf(
     TimerAction(
         text = "1",

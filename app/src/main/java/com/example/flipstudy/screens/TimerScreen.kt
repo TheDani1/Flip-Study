@@ -130,6 +130,10 @@ fun horas(tiempo: MutableState<String>): String {
     }
 }
 
+/**
+ * Función encargada de renderizar la página principal del timer
+ *
+ */
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun TimerScreen(

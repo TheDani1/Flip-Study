@@ -9,6 +9,14 @@ import androidx.room.PrimaryKey
 import com.example.flipstudy.label.data.Label
 import kotlinx.parcelize.Parcelize
 
+/**
+ * Clase de dato que define lo que es una [Statistic] o Estadística.
+ *
+ * @property id Identificador único e inequívoco
+ * @property labelId El identificador de etiqueta a la que pertenece esa estadística.
+ * @property dedicatedSeconds Segundos dedicados a la etiqueta.
+ * @property timestamp Marca de tiempo
+ */
 @Parcelize
 @Entity(tableName = "statistics",
     foreignKeys = [ForeignKey(

@@ -40,6 +40,10 @@ import com.example.flipstudy.label.data.LabelDatabase
 import com.example.flipstudy.label.data.colorEnumToColor
 import kotlinx.coroutines.launch
 
+/**
+ * Función [Composable] que renderiza un modal como base.
+ *
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModalBottomSheet(

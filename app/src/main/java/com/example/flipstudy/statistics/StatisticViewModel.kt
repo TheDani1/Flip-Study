@@ -17,6 +17,12 @@ import com.patrykandpatrick.vico.core.entry.entryModelOf
 import java.util.Calendar
 import java.util.Collections.addAll
 
+/**
+ * Clase viewModel de la pantalla de estadísticas.
+ *
+ * @property db Acceso a la base de datos de [Statistic]
+ *
+ */
 class StatisticViewModel(db: LabelDatabase) : ViewModel() {
 
     private var _model = MutableLiveData<ChartEntryModel>()

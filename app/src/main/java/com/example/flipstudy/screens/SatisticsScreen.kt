@@ -126,6 +126,11 @@ import java.util.Calendar
 import java.util.Locale
 import kotlin.random.Random
 
+
+/**
+ * Función de ayuda para proveer de estilos al Chart
+ *
+ */
 @Composable
 internal fun rememberChartStyle(columnChartColors: List<Color>, lineChartColors: List<Color>): ChartStyle {
     val isSystemInDarkTheme = isSystemInDarkTheme()
@@ -167,6 +172,10 @@ internal fun rememberChartStyle(columnChartColors: List<Color>, lineChartColors:
     }
 }
 
+/**
+ * Función de ayuda y soporte para el marcador del Chart
+ *
+ */
 @Composable
 internal fun rememberMarker(): Marker {
     val labelBackgroundColor = MaterialTheme.colorScheme.surface
@@ -226,6 +235,11 @@ internal fun rememberMarker(): Marker {
     }
 }
 
+
+/**
+ * Función encargada de renderizar una página en blanco para simbolizar la presencia de datos nulos o vacíos.
+ *
+ */
 @Composable
 fun BlankScreenLandscape() {
 
@@ -267,6 +281,10 @@ fun BlankScreenLandscape() {
 
 }
 
+/**
+ * Función encargada de renderizar una página en blanco para simbolizar la presencia de datos nulos o vacíos.
+ *
+ */
 @Preview
 @Composable
 fun BlankScreen() {
@@ -309,6 +327,10 @@ fun BlankScreen() {
 
 }
 
+/**
+ * Función encargada de renderizar la página de las estadísticas.
+ *
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatisticsScreen(orientation: Int, goalsPreferences: GoalsPreferences, statisticViewModel: StatisticViewModel) {

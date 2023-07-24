@@ -15,6 +15,10 @@ import com.example.flipstudy.navigation.AppNavigation
 import com.example.flipstudy.statistics.GoalsPreferences
 import com.example.flipstudy.statistics.StatisticViewModel
 
+/**
+ * Función de composición encargada del renderizado de la pantalla principal.
+ *
+ */
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun MainScreen(

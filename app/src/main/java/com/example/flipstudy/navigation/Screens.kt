@@ -8,6 +8,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.flipstudy.R
 
 
+/**
+ * Clase de dato que contiene las rutas de las diferentes pantallas de la aplicación
+ *
+ */
 sealed class Screens(val route: String, @StringRes val resourceId: Int, val icon: ImageVector) {
     object Statistics : Screens("statistics", R.string.statistics, Icons.Filled.Info)
     object Timer : Screens("timer", R.string.timer, Icons.Filled.Star)

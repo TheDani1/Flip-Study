@@ -4,6 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 
+/**
+ * Función que ayuda al manejo de [SharedPreferences]
+ *
+ */
 public class GoalsPreferences(context: Context) {
 
     val MY_PREF = "MyPreferences"

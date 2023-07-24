@@ -7,6 +7,11 @@ import androidx.room.RoomDatabase
 import com.example.flipstudy.statistics.Statistic
 import com.example.flipstudy.statistics.StatisticDao
 
+
+/**
+ * Clase abstracta de la base de datos de las etiquetas
+ *
+ */
 @Database(entities = [Label::class, Statistic::class], version = 2)
 abstract class LabelDatabase : RoomDatabase() {
 

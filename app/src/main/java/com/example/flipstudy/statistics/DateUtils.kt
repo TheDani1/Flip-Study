@@ -6,6 +6,10 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
+/**
+ * Funciones útiles que ayudan al manejo de fechas.
+ *
+ */
 class DateUtils {
 
     companion object {

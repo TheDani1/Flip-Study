@@ -5,6 +5,7 @@ plugins {
     id 'com.google.devtools.ksp'
     id 'kotlin-parcelize'
     id 'com.google.gms.google-services'
+    id 'org.jetbrains.dokka'
 }
 
 android {
@@ -22,6 +23,10 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+    }
+
+    tasks.dokkaHtml.configure {
+        moduleName.set("Flip&Study")
     }
 
     buildTypes {
@@ -108,4 +113,7 @@ dependencies {
     // FIREBASE
     implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")
+
+    // DOKKA DOCUMENTATION
+    dokkaPlugin 'org.jetbrains.dokka:android-documentation-plugin:1.8.20'
 }

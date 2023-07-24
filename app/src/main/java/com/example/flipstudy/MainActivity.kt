@@ -26,6 +26,10 @@ import com.example.flipstudy.statistics.GoalsPreferences
 import com.example.flipstudy.statistics.StatisticViewModel
 import com.example.flipstudy.theme.FlipStudyTheme
 
+/**
+ * Clase principal de la aplicación
+ *
+ */
 class MainActivity : ComponentActivity(), SensorEventListener {
 
     private val values = MutableLiveData<Float>()

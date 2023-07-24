@@ -21,7 +21,12 @@ import androidx.compose.ui.unit.dp
 private const val DividerLengthInDegrees = 1.8f
 
 /**
- * A donut chart that animates when loaded.
+ * Un chart animado que se encarga de mostrar las horas de trabajo totales
+ *
+ * @param proportions Proporciones de cada una de las etiquetas
+ * @param colors Colores de cada una de las etiquetas
+ * @param modifier Modificador de la función [Composable]
+ *
  */
 @Composable
 fun AnimatedCircle(

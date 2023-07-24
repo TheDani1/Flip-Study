@@ -25,6 +25,18 @@ import com.example.flipstudy.screens.horas
 import com.example.flipstudy.screens.minutos
 import com.example.flipstudy.screens.segundos
 
+/**
+ * Función encargada de renderizar el botón para establecer el CountDown
+ *
+ * @param openDialog Estado del dialogo
+ * @param actions Acciones de cada uno de los botones
+ * @param modifier Modificadores de la función de composición
+ * @param countdown Countdown actual
+ * @param horas Horas actuales
+ * @param minutos Minutos actuales
+ * @param segundos Segundos actuales
+ *
+ */
 @Composable
 fun CountdownSetterDialog(
     openDialog: MutableState<Boolean>,

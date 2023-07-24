@@ -7,6 +7,10 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 
+/**
+ * Interfaz DAO para acceder a los diferentes datos de [Statistic]
+ *
+ */
 @Dao
 interface StatisticDao {
 

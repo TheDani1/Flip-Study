@@ -13,6 +13,12 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.flipstudy.navigation.Screens
 
+/**
+ * Barra de navegación
+ *
+ * @param navController Proporciones de cada una de las etiquetas
+ *
+ */
 @Composable
 fun BottomNavigation(navController: NavController){
 

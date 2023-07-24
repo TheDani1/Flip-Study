@@ -21,6 +21,18 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 
+/**
+ * Función composable encargada de renderizar el botón segmentado
+ *
+ * @param items Listado de items
+ * @param defaultSelectedItemIndex Item seleccionado de manera predeterminada
+ * @param useFixedWidth Uso de ancho fijo
+ * @param itemWidth Ancho de item
+ * @param cornerRadius Radio de la esquina
+ * @param color Color
+ * @param onItemSelection Al seleccionar un item
+ *
+ */
 @Composable
 fun SegmentedButton(
     items: List<String>,

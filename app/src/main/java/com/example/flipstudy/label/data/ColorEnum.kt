@@ -2,10 +2,19 @@ package com.example.flipstudy.label.data
 
 import androidx.compose.ui.graphics.Color
 
+
+/**
+ * Clase enum que lista todos los colores disponibles de etiquetas
+ *
+ */
 enum class ColorEnum {
     BLACK, RED, YELLOW, CYAN, GRAY, GREEN, BLUE, WHITE, MAGENTA
 }
 
+/**
+ * Función que convierte un [ColorEnum] a [Color]
+ *
+ */
 fun colorEnumToColor(colorEnum: ColorEnum) : Color{
     return when(colorEnum){
         ColorEnum.BLACK -> Color.Black
@@ -20,6 +29,10 @@ fun colorEnumToColor(colorEnum: ColorEnum) : Color{
     }
 }
 
+/**
+ * Función que convierte un [Color] a [ColorEnum]
+ *
+ */
 fun colorToEnumColor(color : Color) : ColorEnum{
     return when(color){
         Color.Black -> ColorEnum.BLACK

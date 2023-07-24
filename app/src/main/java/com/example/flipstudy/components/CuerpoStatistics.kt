@@ -29,6 +29,17 @@ fun <E> List<E>.extractProportions(selector: (E) -> Float): List<Float> {
     return this.map { (selector(it) / total).toFloat() }
 }
 
+/**
+ * Función composable encargada de renderizar el propio cuerpo de las estadísticas.
+ *
+ * @param items Listado de items
+ * @param colors Colores a mostrar
+ * @param amounts Cantidades
+ * @param amountsTotal Cantidad total
+ * @param circleLabel Label mostrada dentro del círculo
+ * @param rows Filas generadas
+ *
+ */
 @Composable
 fun <T> CuerpoStatistics(
     items: List<T>,
