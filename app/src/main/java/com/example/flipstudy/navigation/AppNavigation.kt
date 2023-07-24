@@ -27,10 +27,11 @@ fun AppNavigation(
     orientation: Int,
     goalsPreferences: GoalsPreferences,
     statisticViewModel: StatisticViewModel,
-    rotationValues: Float
+    rotationValues: Float,
+    onClickButtonWear: () -> Unit
 ){
     NavHost(navController = navController, startDestination = Screens.Timer.route, modifier){
-        composable(Screens.Timer.route) { TimerScreen(db, sensorValues, vibratorManager, ringtone, orientation, rotationValues) }
+        composable(Screens.Timer.route) { TimerScreen(db, sensorValues, vibratorManager, ringtone, orientation, rotationValues, onClickButtonWear) }
         composable(Screens.Statistics.route) { StatisticsScreen(orientation, goalsPreferences, statisticViewModel) }
     }
 }

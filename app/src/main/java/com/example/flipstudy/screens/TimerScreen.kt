@@ -29,6 +29,8 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Vibration
 import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material.icons.filled.Watch
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
@@ -138,6 +140,7 @@ fun TimerScreen(
     ringtone: Ringtone,
     orientation: Int,
     rotationValues: Float,
+    onClickButtonWear: () -> Unit,
 ) {
 
     val checkedVibration = rememberSaveable { mutableStateOf(true) }
@@ -349,7 +352,6 @@ fun TimerScreen(
 
     }else {
 
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -411,6 +413,10 @@ fun TimerScreen(
                                 style = MaterialTheme.typography.displaySmall,
                                 modifier = Modifier.padding(horizontal = 5.dp)
                             )
+
+                            Button(onClick = onClickButtonWear) {
+                                Icon( Icons.Default.Watch, contentDescription = "Sync watch")
+                            }
                         }
                     }
 
@@ -580,7 +586,8 @@ fun LandscapeView(
                 .background(
                     color = MaterialTheme.colorScheme.surface,
                     shape = RoundedCornerShape(size = 12.dp)
-                ).fillMaxHeight(),
+                )
+                .fillMaxHeight(),
             shape = AbsoluteRoundedCornerShape(20.dp)
         ){
             Row(

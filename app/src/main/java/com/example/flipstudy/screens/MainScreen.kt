@@ -25,12 +25,13 @@ fun MainScreen(
     orientation: Int,
     goalsPreferences: GoalsPreferences,
     statisticViewModel: StatisticViewModel,
-    rotationValues: Float
+    rotationValues: Float,
+    onClickButtonWear: () -> Unit
 ) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomNavigation(navController = navController) }
     ) {innerPadding ->
-        AppNavigation(navController, Modifier.padding(innerPadding), db, sensorValues, vibratorManager, ringtone, orientation, goalsPreferences, statisticViewModel, rotationValues)
+        AppNavigation(navController, Modifier.padding(innerPadding), db, sensorValues, vibratorManager, ringtone, orientation, goalsPreferences, statisticViewModel, rotationValues, onClickButtonWear)
     }
 }

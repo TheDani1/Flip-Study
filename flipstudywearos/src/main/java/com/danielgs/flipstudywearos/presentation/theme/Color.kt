@@ -1,6 +1,6 @@
 package com.example.flipstudy.theme
-
 import androidx.compose.ui.graphics.Color
+import androidx.wear.compose.material.Colors
 
 val md_theme_light_primary = Color(0xFF6750A4)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
@@ -67,8 +67,13 @@ val md_theme_dark_scrim = Color(0xFF000000)
 
 val seed = Color(0xFF6750A4)
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
-val Red400 = Color(0xFFCF6679)
+internal val wearColorPalette: Colors = Colors(
+    primary = md_theme_light_primary,
+    primaryVariant = md_theme_light_primaryContainer,
+    secondary = md_theme_light_secondary,
+    secondaryVariant = md_theme_light_secondaryContainer,
+    error = md_theme_light_error,
+    onPrimary = Color.Black,
+    onSecondary = Color.Black,
+    onError = Color.Black
+)
